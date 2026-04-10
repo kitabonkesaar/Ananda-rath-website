@@ -28,7 +28,7 @@ const PackageDetail = () => {
   }
 
   const whatsappMsg = `Hello, I want details about ${pkg.title} from Ananda Rath. Price: ${pkg.price}`;
-  const itinerary = (pkg.itinerary as ItineraryDay[]) || [];
+  const itinerary = (pkg.itinerary as unknown as ItineraryDay[]) || [];
 
   return (
     <div className="pb-20">
