@@ -1,13 +1,13 @@
 import Navbar from "@/components/Navbar";
-import HomePage from "@/components/HomePage";
+import PackageDetail from "@/components/PackageDetail";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
-const Index = () => (
+const PackagePage = () => (
   <>
     <Navbar />
-    <HomePage />
+    <PackageDetail />
     <WhatsAppButton variant="floating" />
   </>
 );
 
-export default Index;
+export default PackagePage;
