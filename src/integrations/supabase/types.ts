@@ -14,16 +14,232 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      gallery_photos: {
+        Row: {
+          caption: string | null
+          created_at: string
+          display_order: number | null
+          id: string
+          image_url: string
+          package_id: string | null
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          image_url: string
+          package_id?: string | null
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          image_url?: string
+          package_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gallery_photos_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      inquiries: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          notes: string | null
+          package_id: string | null
+          package_name: string | null
+          phone: string
+          pickup_location: string | null
+          preferred_date: string | null
+          status: string
+          travelers: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          notes?: string | null
+          package_id?: string | null
+          package_name?: string | null
+          phone: string
+          pickup_location?: string | null
+          preferred_date?: string | null
+          status?: string
+          travelers?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          package_id?: string | null
+          package_name?: string | null
+          phone?: string
+          pickup_location?: string | null
+          preferred_date?: string | null
+          status?: string
+          travelers?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inquiries_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      packages: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number | null
+          duration: string
+          exclusions: string[] | null
+          highlights: string[] | null
+          id: string
+          image_url: string | null
+          inclusions: string[] | null
+          is_active: boolean | null
+          itinerary: Json | null
+          next_departure: string | null
+          price: string
+          price_note: string | null
+          seats_left: number | null
+          slug: string
+          starting_from: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          duration: string
+          exclusions?: string[] | null
+          highlights?: string[] | null
+          id?: string
+          image_url?: string | null
+          inclusions?: string[] | null
+          is_active?: boolean | null
+          itinerary?: Json | null
+          next_departure?: string | null
+          price: string
+          price_note?: string | null
+          seats_left?: number | null
+          slug: string
+          starting_from: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          duration?: string
+          exclusions?: string[] | null
+          highlights?: string[] | null
+          id?: string
+          image_url?: string | null
+          inclusions?: string[] | null
+          is_active?: boolean | null
+          itinerary?: Json | null
+          next_departure?: string | null
+          price?: string
+          price_note?: string | null
+          seats_left?: number | null
+          slug?: string
+          starting_from?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          created_at: string
+          display_order: number | null
+          id: string
+          is_visible: boolean | null
+          location: string | null
+          name: string
+          photo_url: string | null
+          rating: number | null
+          text: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          location?: string | null
+          name: string
+          photo_url?: string | null
+          rating?: number | null
+          text: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          location?: string | null
+          name?: string
+          photo_url?: string | null
+          rating?: number | null
+          text?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +366,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
