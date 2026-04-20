@@ -92,7 +92,7 @@ export const HeroSection = () => {
         <img src={heroImg} alt="Sacred Kedarnath Temple in the Himalayas" className="h-full w-full object-cover" width={1920} height={1080} />
         <div className="absolute inset-0 gradient-hero-overlay" />
       </div>
-      <div className="container relative z-10 py-16">
+      <div className="container relative z-10 pt-16 pb-28 md:pb-32">
         <div className="grid lg:grid-cols-2 gap-10 items-center">
           {/* Left side - Text */}
           <div className="animate-fade-in-up">
