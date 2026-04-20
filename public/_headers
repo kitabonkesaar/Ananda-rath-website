@@ -1,11 +1,35 @@
 /*
-  # Security Headers
+  # ── Security Headers ──
+
+  # Content Security Policy (CSP) - XSS Protection
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https: http:; connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.supabase.co https://wa.me; frame-ancestors 'self'; base-uri 'self'; form-action 'self' https://wa.me; object-src 'none'; upgrade-insecure-requests
+
+  # HSTS - Force HTTPS for 1 year including subdomains
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+  # Cross-Origin Opener Policy - Origin isolation
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+
+  # Cross-Origin Embedder Policy
+  Cross-Origin-Resource-Policy: cross-origin
+
+  # Clickjacking Protection
   X-Frame-Options: SAMEORIGIN
+
+  # MIME type sniffing protection
   X-Content-Type-Options: nosniff
+
+  # XSS Filter (legacy browsers)
   X-XSS-Protection: 1; mode=block
+
+  # Referrer Policy
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+  # Permissions Policy
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
 
 /admin
-  # Extra protection for admin route
+  X-Robots-Tag: noindex, nofollow
+
+/admin/*
   X-Robots-Tag: noindex, nofollow
