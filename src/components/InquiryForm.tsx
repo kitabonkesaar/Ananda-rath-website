@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { WHATSAPP_NUMBER } from "@/data/config";
-import { useSubmitInquiry } from "@/hooks/useSupabase";
+import { useSubmitInquiry } from "@/hooks/useConvex";
 import { Send } from "lucide-react";
 import { toast } from "sonner";
 

@@ -1,4 +1,4 @@
-import { useAdminInquiries, useUpdateInquiryStatus } from "@/hooks/useSupabase";
+import { useAdminInquiries, useUpdateInquiryStatus } from "@/hooks/useConvex";
 import { useState } from "react";
 import { Phone, Calendar, MapPin, Users, Search } from "lucide-react";
 import { WHATSAPP_NUMBER } from "@/data/config";

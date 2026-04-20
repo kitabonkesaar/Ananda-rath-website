@@ -1,8 +1,9 @@
 import { useParams, Link } from "react-router-dom";
-import { usePackageBySlug } from "@/hooks/useSupabase";
+import { usePackageBySlug } from "@/hooks/useConvex";
 import WhatsAppButton, { CallButton } from "@/components/WhatsAppButton";
 import { Clock, MapPin, Check, X, ArrowLeft, Users, Image } from "lucide-react";
 import InquiryForm from "@/components/InquiryForm";
+import SEO from "@/components/SEO";
 
 interface ItineraryDay {
   day: number;
@@ -32,6 +33,12 @@ const PackageDetail = () => {
 
   return (
     <div className="pb-20">
+      <SEO 
+        title={`${pkg.title} - Yatra Package`}
+        description={pkg.subtitle || `Book ${pkg.title} yatra from Odisha. ${pkg.duration} journey starting at ${pkg.price}. Includes AC sleeper bus, meals, and stay.`}
+        keywords={`${pkg.title} yatra package, spiritual tour ${pkg.title}, Odisha to ${pkg.title}, AnandaRath ${pkg.title}`}
+        ogImage={pkg.image_url}
+      />
       {/* Hero */}
       <div className="relative h-72 md:h-96">
         {pkg.image_url ? (

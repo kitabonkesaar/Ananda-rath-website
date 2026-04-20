@@ -1,11 +1,10 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { Session } from "@supabase/supabase-js";
 
 interface AuthContextType {
-  session: Session | null;
+  session: any | null;
   isAdmin: boolean;
   loading: boolean;
+  signIn: (email: string, pass: string) => Promise<{error?: Error}>;
   signOut: () => Promise<void>;
 }
 
@@ -13,56 +12,44 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   isAdmin: false,
   loading: true,
+  signIn: async () => ({}),
   signOut: async () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<any | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const checkAdmin = async (userId: string) => {
-    const { data } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId)
-      .eq("role", "admin")
-      .maybeSingle();
-    setIsAdmin(!!data);
-  };
-
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (session?.user) {
-        setTimeout(() => checkAdmin(session.user.id), 0);
-      } else {
-        setIsAdmin(false);
-      }
-      setLoading(false);
-    });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session?.user) {
-        checkAdmin(session.user.id);
-      }
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    const isLoggedIn = localStorage.getItem("demo_admin_logged_in") === "true";
+    if (isLoggedIn) {
+      setSession({ user: { email: "admin@anandarath.com" } });
+      setIsAdmin(true);
+    }
+    setLoading(false);
   }, []);
 
+  const signIn = async (email: string, pass: string) => {
+    if (email === "admin@anandarath.com" && pass === "admin123") {
+      localStorage.setItem("demo_admin_logged_in", "true");
+      setSession({ user: { email } });
+      setIsAdmin(true);
+      return {};
+    }
+    return { error: new Error("Invalid credentials") };
+  };
+
   const signOut = async () => {
-    await supabase.auth.signOut();
+    localStorage.removeItem("demo_admin_logged_in");
     setSession(null);
     setIsAdmin(false);
   };
 
   return (
-    <AuthContext.Provider value={{ session, isAdmin, loading, signOut }}>
+    <AuthContext.Provider value={{ session, isAdmin, loading, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );

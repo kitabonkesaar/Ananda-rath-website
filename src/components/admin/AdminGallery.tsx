@@ -1,4 +1,4 @@
-import { useAdminGallery, useUpsertGalleryPhoto, useDeleteGalleryPhoto, uploadImage, useAdminPackages } from "@/hooks/useSupabase";
+import { useAdminGallery, useUpsertGalleryPhoto, useDeleteGalleryPhoto, uploadImage, useAdminPackages } from "@/hooks/useConvex";
 import { useState, useRef } from "react";
 import { Plus, Trash2, Upload, X } from "lucide-react";
 import { toast } from "sonner";
@@ -23,8 +23,8 @@ const AdminGallery = () => {
         const url = await uploadImage(files[i], "gallery");
         await upsert.mutateAsync({
           image_url: url,
-          caption: caption || null,
-          package_id: packageId || null,
+          caption: caption || undefined,
+          package_id: packageId || undefined,
           display_order: (photos?.length || 0) + i,
         });
       }

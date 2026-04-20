@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import { Footer } from "@/components/HomePage";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import InquiryForm from "@/components/InquiryForm";
+import SEO from "@/components/SEO";
 import { Phone, Mail, MapPinned, Clock, MessageCircle } from "lucide-react";
 import { WHATSAPP_NUMBER } from "@/data/config";
 
@@ -24,7 +25,6 @@ const contactMethods = [
     description: "Chat with us anytime",
     value: "+91 98765 43210",
     href: `https://wa.me/${WHATSAPP_NUMBER}`,
-    color: "bg-green-500/10 text-green-600",
   },
   {
     icon: Phone,
@@ -32,7 +32,6 @@ const contactMethods = [
     description: "Mon-Sat, 9AM-9PM",
     value: "+91 98765 43210",
     href: `tel:+${WHATSAPP_NUMBER}`,
-    color: "bg-blue-500/10 text-blue-600",
   },
   {
     icon: Mail,
@@ -40,7 +39,6 @@ const contactMethods = [
     description: "We reply within 24 hours",
     value: "info@anandarath.com",
     href: "mailto:info@anandarath.com",
-    color: "bg-purple-500/10 text-purple-600",
   },
   {
     icon: MapPinned,
@@ -48,12 +46,16 @@ const contactMethods = [
     description: "Visit us in person",
     value: "Bhubaneswar, Odisha",
     href: "#",
-    color: "bg-orange-500/10 text-orange-600",
   },
 ];
 
 const Contact = () => (
   <div className="flex flex-col min-h-screen">
+    <SEO 
+      title="Contact Us - Plan Your Yatra"
+      description="Contact AnandaRath for spiritual yatra bookings from Odisha. Reach us via WhatsApp, phone or visit our office in Bhubaneswar."
+      keywords="contact AnandaRath, spiritual tour inquiry, yatra booking Odisha, Bhubaneswar travel agency contact"
+    />
     <Navbar />
     <main className="flex-1">
       <ContactHero />
@@ -77,10 +79,11 @@ const Contact = () => (
                     href={method.href}
                     target={method.href.startsWith("http") ? "_blank" : undefined}
                     rel={method.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="flex items-start gap-4 p-4 rounded-xl bg-card shadow-card card-interactive"
+                    className="flex items-start gap-4 p-4 rounded-xl bg-card shadow-card card-interactive animate-reveal"
+                    style={{ animationDelay: `${contactMethods.indexOf(method) * 100}ms` }}
                   >
-                    <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${method.color} shrink-0`}>
-                      <method.icon className="h-5 w-5" />
+                    <div className="icon-3d h-11 w-11 shrink-0">
+                      <method.icon className="h-5 w-5 text-white relative z-10" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-foreground text-sm">{method.title}</h3>

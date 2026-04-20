@@ -9,6 +9,8 @@ const navLinks = [
   { to: "/packages", label: "Packages" },
   { to: "/gallery", label: "Gallery" },
   { to: "/about", label: "About" },
+  { to: "/video-testimonials", label: "Reviews" },
+  { to: "/blog", label: "Blog" },
   { to: "/contact", label: "Contact" },
 ];
 
@@ -37,11 +39,8 @@ const Navbar = () => {
       }`}
     >
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
-          <img src={logo} alt="AnandaRath" className="h-10 w-10 transition-transform group-hover:scale-110" />
-          <span className="text-xl font-bold text-foreground">
-            Ananda<span className="text-gradient-saffron">Rath</span>
-          </span>
+        <Link to="/" className="flex items-center group">
+          <img src={logo} alt="AnandaRath" className="h-[52px] w-auto transition-transform group-hover:scale-[1.02]" />
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">

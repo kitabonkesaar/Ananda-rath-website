@@ -1,8 +1,10 @@
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Clock, MapPin, Star, Bus, Utensils, Shield, Heart, Image, Phone, Mail, MapPinned, ArrowRight, Sparkles } from "lucide-react";
+import { Clock, MapPin, Star, Bus, Utensils, Shield, Heart, Image, Phone, Mail, MapPinned, ArrowRight, Sparkles, Send, Camera } from "lucide-react";
 import WhatsAppButton from "./WhatsAppButton";
 import heroImg from "@/assets/hero-kedarnath.jpg";
-import { usePackages, useTestimonials, useGalleryPhotos } from "@/hooks/useSupabase";
+import logo from "@/assets/logo.png";
+import { usePackages, useTestimonials, useGalleryPhotos, useSubmitInquiry, useHeroConfig } from "@/hooks/useConvex";
 import { WHATSAPP_NUMBER } from "@/data/config";
 
 // ── Fallback stats ──
@@ -13,39 +15,181 @@ const fallbackStats = [
   { number: "3+", label: "Years Experience" },
 ];
 
-// ── Hero Section ──
-export const HeroSection = () => (
-  <section className="relative min-h-[92vh] flex items-center overflow-hidden">
-    <div className="absolute inset-0">
-      <img src={heroImg} alt="Sacred Kedarnath Temple in the Himalayas" className="h-full w-full object-cover" width={1920} height={1080} />
-      <div className="absolute inset-0 gradient-hero-overlay" />
-    </div>
-    <div className="container relative z-10 py-20">
-      <div className="max-w-2xl animate-fade-in-up">
-        <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 mb-6">
-          <span className="text-sm">🙏</span>
-          <span className="text-sm font-medium text-white/90 tracking-wide">Ananda Rath Spiritual Tourism</span>
-        </div>
-        <h1 className="mb-6 text-4xl font-extrabold leading-tight text-white md:text-6xl lg:text-7xl">
-          Every Yatra, A<br />
-          <span className="text-gradient-saffron drop-shadow-lg" style={{ WebkitTextFillColor: 'transparent' }}>Spiritual Experience</span>
-        </h1>
-        <p className="mb-8 text-lg text-white/75 max-w-xl leading-relaxed">
-          From Odisha to Kedarnath, Kashi, Badrinath & Mahakaleshwar — comfortable AC Sleeper Bus journeys with meals, accommodation & guided darshan included.
-        </p>
-        <div className="flex flex-wrap gap-4">
-          <WhatsAppButton variant="hero" label="Enquire on WhatsApp" />
-          <Link to="/packages" className="inline-flex items-center gap-2 rounded-full border-2 border-white/25 px-8 py-4 text-lg font-semibold text-white transition-all hover:border-white/50 hover:bg-white/10 backdrop-blur-sm">
-            View Packages
-            <ArrowRight className="h-5 w-5" />
-          </Link>
+// ── Countdown Timer Hook ──
+const useCountdown = (targetDate: Date) => {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date().getTime();
+      const diff = targetDate.getTime() - now;
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+      setTimeLeft({
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / (1000 * 60)) % 60),
+        seconds: Math.floor((diff / 1000) % 60),
+      });
+    };
+    tick();
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
+  }, [targetDate]);
+
+  return timeLeft;
+};
+
+// ── Hero Section with Countdown + Lead Form ──
+export const HeroSection = () => {
+  const { data: packages } = usePackages();
+  const { data: heroConfig } = useHeroConfig();
+  const [formData, setFormData] = useState({ name: "", phone: "" });
+  const [submitted, setSubmitted] = useState(false);
+  const submitInquiry = useSubmitInquiry();
+
+  // Find closest upcoming departure date
+  const nextDeparture = useMemo(() => {
+    if (heroConfig?.target_date) return new Date(heroConfig.target_date);
+    if (!packages?.length) return new Date(Date.now() + 35 * 24 * 60 * 60 * 1000);
+    const now = new Date();
+    const dates = packages
+      .filter(p => p.next_departure)
+      .map(p => new Date(p.next_departure!))
+      .filter(d => d.getTime() > now.getTime());
+    return dates.length > 0 ? dates.sort((a, b) => a.getTime() - b.getTime())[0] : new Date(Date.now() + 35 * 24 * 60 * 60 * 1000);
+  }, [packages, heroConfig]);
+
+  const timeLeft = useCountdown(nextDeparture);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name.trim() || !formData.phone.trim()) return;
+    try {
+      await submitInquiry.mutateAsync({
+        name: formData.name.trim(),
+        phone: formData.phone.trim(),
+        package_name: "Homepage Inquiry",
+      });
+      // Also open WhatsApp
+      const message = `🙏 New Inquiry - AnandaRath\n\nName: ${formData.name}\nPhone: ${formData.phone}`;
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank");
+      setSubmitted(true);
+    } catch {
+      // fallback: just open WhatsApp
+      const message = `🙏 Inquiry from ${formData.name}\nPhone: ${formData.phone}`;
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank");
+      setSubmitted(true);
+    }
+  };
+
+  return (
+    <section className="relative min-h-[92vh] flex items-center overflow-hidden">
+      <div className="absolute inset-0">
+        <img src={heroImg} alt="Sacred Kedarnath Temple in the Himalayas" className="h-full w-full object-cover" width={1920} height={1080} />
+        <div className="absolute inset-0 gradient-hero-overlay" />
+      </div>
+      <div className="container relative z-10 py-16">
+        <div className="grid lg:grid-cols-2 gap-10 items-center">
+          {/* Left side - Text */}
+          <div className="animate-fade-in-up">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 mb-6">
+              <span className="text-sm">🙏</span>
+              <span className="text-sm font-medium text-white/90 tracking-wide">Ananda Rath Spiritual Tourism</span>
+            </div>
+            <h1 className="mb-6 text-4xl font-extrabold leading-tight text-white md:text-5xl lg:text-6xl">
+              Leading <span className="text-gradient-saffron drop-shadow-lg" style={{ WebkitTextFillColor: 'transparent' }}>Odisha Tirthayatra</span><br />
+              Organizer since 2023
+            </h1>
+            <p className="mb-8 text-lg text-white/75 max-w-xl leading-relaxed">
+              Experience the best of Odisha's spiritual tourism. We organize comfortable AC Sleeper Bus journeys to Kedarnath, Kashi, Vrindavan, Badrinath & more.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <WhatsAppButton variant="hero" label="Enquire on WhatsApp" />
+              <Link to="/packages" className="inline-flex items-center gap-2 rounded-full border-2 border-white/25 px-8 py-4 text-lg font-semibold text-white transition-all hover:border-white/50 hover:bg-white/10 backdrop-blur-sm">
+                View Packages
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Right side - Countdown + Form */}
+          <div className="animate-fade-in-up animate-delay-200">
+            <div className="rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 p-6 md:p-8 shadow-2xl max-w-md mx-auto lg:ml-auto">
+              {/* Countdown Timer */}
+              <div className="mb-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60 mb-3 text-center">⏰ {heroConfig?.timer_title ?? "NEXT YATRA DEPARTING IN"}</p>
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { value: timeLeft.days, label: "Days" },
+                    { value: timeLeft.hours, label: "Hours" },
+                    { value: timeLeft.minutes, label: "Mins" },
+                    { value: timeLeft.seconds, label: "Secs" },
+                  ].map((item) => (
+                    <div key={item.label} className="text-center">
+                      <div className="rounded-xl bg-white/15 backdrop-blur-sm border border-white/10 py-3 px-2">
+                        <p className="text-2xl md:text-3xl font-extrabold text-white tabular-nums">{String(item.value).padStart(2, "0")}</p>
+                      </div>
+                      <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-wider text-white/50">{item.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="border-t border-white/10 mb-6" />
+
+              {/* Lead Form */}
+              {submitted ? (
+                <div className="text-center py-4">
+                  <p className="text-3xl mb-2">🙏</p>
+                  <p className="text-lg font-bold text-white">Thank You!</p>
+                  <p className="text-sm text-white/60 mt-1">We'll contact you shortly on WhatsApp.</p>
+                  <button onClick={() => { setSubmitted(false); setFormData({ name: "", phone: "" }); }} className="mt-4 text-sm text-white/70 underline hover:text-white">Submit again</button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-3">
+                  <p className="text-sm font-semibold text-white/80 mb-1">📋 {heroConfig?.form_title ?? "Book Your Seat Now"}</p>
+                  <input
+                    type="text"
+                    placeholder="Your Name"
+                    required
+                    maxLength={100}
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent backdrop-blur-sm"
+                  />
+                  <input
+                    type="tel"
+                    placeholder="Phone Number"
+                    required
+                    maxLength={15}
+                    pattern="[0-9]{10,15}"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent backdrop-blur-sm"
+                  />
+                  <button
+                    type="submit"
+                    disabled={submitInquiry.isPending}
+                    className="w-full rounded-xl gradient-saffron px-5 py-3.5 text-sm font-bold text-white shadow-saffron transition-all hover:scale-[1.02] disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    <Send className="h-4 w-4" />
+                    {submitInquiry.isPending ? "Sending..." : "Get Callback"}
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    {/* Decorative bottom gradient */}
-    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
-  </section>
-);
+      {/* Decorative bottom gradient */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
+    </section>
+  );
+};
 
 // ── Stats Section ──
 export const StatsSection = () => (
@@ -71,8 +215,8 @@ export const FeaturedPackagesSection = () => {
     <section className="py-24">
       <div className="container">
         <div className="mb-14 text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary">🕉️ Our Yatras</p>
-          <h2 className="text-3xl font-bold text-foreground md:text-5xl">Popular Pilgrimage Packages</h2>
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary">🕉️ Best Odisha Tirthayatra Packages</p>
+          <h2 className="text-3xl font-bold text-foreground md:text-5xl">Top Spiritual Tourism Circuits</h2>
           <div className="section-divider mt-4" />
         </div>
         {isLoading ? (
@@ -283,26 +427,31 @@ export const GallerySection = () => {
 
 // ── Why Choose Section ──
 export const WhyChooseSection = () => (
-  <section className="py-24 bg-muted/40">
+  <section className="py-24 warm-pattern-bg">
     <div className="container">
       <div className="mb-14 text-center">
         <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary">✨ Why Us</p>
         <h2 className="text-3xl font-bold text-foreground md:text-5xl">Why Choose AnandaRath?</h2>
         <div className="section-divider mt-4" />
       </div>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="flex flex-wrap items-center justify-center gap-6">
         {[
-          { icon: Bus, title: "AC Sleeper Bus", desc: "Comfortable 2x2 seating with USB charging points and reclining seats" },
-          { icon: Utensils, title: "Meals Included", desc: "Pure vegetarian breakfast and dinner at quality restaurants en-route" },
-          { icon: Shield, title: "Safe Travel", desc: "Experienced drivers, GPS tracking, travel insurance for all passengers" },
-          { icon: Heart, title: "Guided Darshan", desc: "Religious guide & complete darshan arrangements at every temple" },
+          { icon: Bus, title: "AC Sleeper Bus", desc: "Comfortable 2x1 seating with USB charging points and reclining seats", delay: "0ms" },
+          { icon: Utensils, title: "Meals Included", desc: "Odia Cooked Food Pure Veg breakfast and dinner at quality restaurants en-route", delay: "80ms" },
+          { icon: Shield, title: "Safe Travel", desc: "Experienced drivers, GPS tracking, travel insurance for all passengers", delay: "160ms" },
+          { icon: Heart, title: "Guided Darshan", desc: "Religious guide & complete darshan arrangements at every temple", delay: "240ms" },
+          { icon: Camera, title: "Photography", desc: "Professional photography to capture your spiritual journey and special moments", delay: "320ms" },
         ].map((item, i) => (
-          <div key={item.title} className={`rounded-2xl bg-card p-8 text-center shadow-card card-interactive`}>
-            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl gradient-saffron shadow-saffron">
-              <item.icon className="h-8 w-8 text-white" />
+          <div
+            key={item.title}
+            className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(20%-19.2px)] rounded-2xl border border-border/50 bg-card backdrop-blur-xl p-8 text-center shadow-card hover:shadow-card-hover hover:-translate-y-2 transition-all duration-400 group animate-reveal"
+            style={{ animationDelay: item.delay }}
+          >
+            <div className="icon-3d mx-auto mb-5 h-14 w-14 animate-micro-bounce" style={{ animationDelay: `${i * 200}ms` }}>
+              <item.icon className="h-6 w-6 text-white relative z-10" strokeWidth={1.5} />
             </div>
-            <h3 className="mb-3 text-lg font-bold text-foreground">{item.title}</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+            <h3 className="mb-3 text-lg font-bold text-foreground tracking-tight">{item.title}</h3>
+            <p className="text-[13px] text-muted-foreground leading-relaxed">{item.desc}</p>
           </div>
         ))}
       </div>
@@ -388,9 +537,7 @@ export const Footer = () => (
       <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
         {/* Brand */}
         <div className="space-y-4">
-          <span className="text-xl font-bold">
-            Ananda<span className="text-gradient-saffron">Rath</span>
-          </span>
+          <img src={logo} alt="AnandaRath" className="h-12 w-auto brightness-0 invert" />
           <p className="text-sm text-white/60 leading-relaxed">
             Every Yatra, A Spiritual Experience. We organize premium pilgrimage tours from Odisha to sacred destinations across India.
           </p>
@@ -404,6 +551,7 @@ export const Footer = () => (
               { to: "/", label: "Home" },
               { to: "/packages", label: "Packages" },
               { to: "/gallery", label: "Gallery" },
+              { to: "/blog", label: "Blog" },
               { to: "/about", label: "About Us" },
               { to: "/contact", label: "Contact" },
             ].map((link) => (

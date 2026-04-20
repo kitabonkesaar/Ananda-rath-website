@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import { WhyChooseSection, TestimonialsSection, Footer } from "@/components/HomePage";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import SEO from "@/components/SEO";
 import { Users, Award, Globe, Heart } from "lucide-react";
 import heroImg from "@/assets/hero-kedarnath.jpg";
 
@@ -58,7 +59,7 @@ const OurStory = () => (
 );
 
 const MissionSection = () => (
-  <section className="py-24 bg-muted/40">
+  <section className="py-24 warm-pattern-bg">
     <div className="container">
       <div className="mb-14 text-center">
         <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary">Our Values</p>
@@ -71,10 +72,10 @@ const MissionSection = () => (
           { icon: Users, title: "Community", desc: "We build a community of like-minded pilgrims who share the joy of spiritual journeys together." },
           { icon: Award, title: "Excellence", desc: "From bus quality to meal standards, we never compromise on the quality of our services." },
           { icon: Globe, title: "Accessibility", desc: "Making sacred pilgrimages accessible and affordable to devotees from all walks of life." },
-        ].map((item) => (
-          <div key={item.title} className="rounded-2xl bg-card p-8 text-center shadow-card card-interactive">
-            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
-              <item.icon className="h-7 w-7 text-primary" />
+        ].map((item, i) => (
+          <div key={item.title} className="rounded-2xl bg-card p-8 text-center shadow-card card-interactive animate-reveal" style={{ animationDelay: `${i * 100}ms` }}>
+            <div className="icon-3d mx-auto mb-5 h-14 w-14 animate-micro-bounce" style={{ animationDelay: `${i * 150}ms` }}>
+              <item.icon className="h-7 w-7 text-white relative z-10" />
             </div>
             <h3 className="mb-3 text-lg font-bold text-foreground">{item.title}</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
@@ -87,6 +88,11 @@ const MissionSection = () => (
 
 const About = () => (
   <div className="flex flex-col min-h-screen">
+    <SEO 
+      title="About Us - Our Spiritual Mission"
+      description="Learn about AnandaRath, Odisha's leading spiritual travel agency. Our mission is to provide comfortable and divine yatra experiences to every devotee from Odisha."
+      keywords="AnandaRath, Odisha spiritual travel agency, spiritual tourism mission, about Ananda Rath Odisha, spiritual tour organizers Bhubaneswar"
+    />
     <Navbar />
     <main className="flex-1">
       <AboutHero />

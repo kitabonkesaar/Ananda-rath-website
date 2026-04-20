@@ -11,6 +11,8 @@ import About from "./pages/About.tsx";
 import Contact from "./pages/Contact.tsx";
 import PackagePage from "./pages/PackagePage.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
+import VideoTestimonials from "./pages/VideoTestimonials.tsx";
+import BlogPage from "./pages/BlogPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -28,6 +30,8 @@ const App = () => (
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/video-testimonials" element={<VideoTestimonials />} />
+            <Route path="/blog" element={<BlogPage />} />
             <Route path="/package/:id" element={<PackagePage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="*" element={<NotFound />} />

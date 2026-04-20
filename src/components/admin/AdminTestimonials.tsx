@@ -1,4 +1,4 @@
-import { useAdminTestimonials, useUpsertTestimonial, useDeleteTestimonial, uploadImage } from "@/hooks/useSupabase";
+import { useAdminTestimonials, useUpsertTestimonial, useDeleteTestimonial, uploadImage } from "@/hooks/useConvex";
 import { useState, useRef } from "react";
 import { Plus, Edit2, Trash2, X, Upload, Star } from "lucide-react";
 import { toast } from "sonner";
@@ -50,10 +50,10 @@ const AdminTestimonials = () => {
       await upsert.mutateAsync({
         ...(editing.id ? { id: editing.id } : {}),
         name: editing.name,
-        location: editing.location || null,
+        location: editing.location || undefined,
         text: editing.text,
         rating: editing.rating,
-        photo_url: editing.photo_url || null,
+        photo_url: editing.photo_url || undefined,
         is_visible: editing.is_visible,
         display_order: editing.display_order,
       });
