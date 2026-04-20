@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import SEO from "@/components/SEO";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import { Footer } from "@/components/HomePage";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { getYoutubeEmbedUrl } from "@/data/videoTestimonials";
@@ -15,24 +14,12 @@ const VideoTestimonials = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <SEO 
-        title="Pilgrim Video Reviews – Real Experiences from Our Yatras"
-        description="Watch real video testimonials from devotees who joined AnandaRath spiritual yatras from Odisha. Hear about their Kedarnath, Kashi & Badrinath journey experiences."
-        keywords="yatra reviews video, spiritual tour testimonials, AnandaRath feedback, pilgrim videos Odisha, Kedarnath yatra reviews, customer testimonials pilgrimage"
-        pageType="reviews"
-        breadcrumbs={[
-          { name: "Home", url: "/" },
-          { name: "Reviews", url: "/video-testimonials" },
-        ]}
+        title="Pilgrim Experiences - Video Testimonials"
+        description="Watch video reviews from devotees who joined our spiritual yatras. Hear about their experiences with AnandaRath services from Odisha."
+        keywords="yatra reviews, spiritual tour testimonials, AnandaRath feedback, pilgrim videos Odisha, Kedarnath yatra reviews"
       />
       <Navbar />
       <main className="flex-1">
-        {/* SEO: Visible breadcrumbs */}
-        <div className="container pt-4">
-          <Breadcrumbs items={[
-            { label: "Home", href: "/" },
-            { label: "Video Reviews" },
-          ]} />
-        </div>
         {/* Page Header */}
         <section className="page-header rounded-none">
           <div className="relative z-10 container">

@@ -1,21 +1,7 @@
-# AnandaRath Spiritual Tourism - robots.txt
-# SEO: Allow all crawlers except admin routes
-
 User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /admin/*
-Disallow: /*.json$
 
-# SEO: Allow Google image bot to index gallery images
-User-agent: Googlebot-Image
-Allow: /gallery
-Allow: /banners/
-Allow: /logo.png
-
-# SEO: Crawl-delay for politeness (optional)
-User-agent: *
-Crawl-delay: 1
-
-# Sitemap location for automated discovery
+# Sitemap
 Sitemap: https://anandarath.com/sitemap.xml

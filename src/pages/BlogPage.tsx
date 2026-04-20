@@ -5,7 +5,6 @@ import { Footer } from "@/components/HomePage";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { usePublishedBlogPosts } from "@/hooks/useConvex";
 import SEO from "@/components/SEO";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import { Calendar, User, ArrowRight, Tag, BookOpen, Loader2 } from "lucide-react";
 
 const BlogPage = () => {
@@ -154,31 +153,14 @@ const BlogPage = () => {
   if (selectedPost) {
     return (
       <div className="flex flex-col min-h-screen">
-        {/* SEO: BlogPosting structured data for individual posts */}
         <SEO 
           title={selectedPost.title}
           description={selectedPost.excerpt}
-          keywords={`${selectedPost.title}, spiritual blog Odisha, yatra guide, ${selectedPost.category}, pilgrimage tips`}
+          keywords={`${selectedPost.title}, spiritual blog Odisha, yatra stories, ${selectedPost.category}`}
           ogImage={selectedPost.cover_image}
-          pageType="blog-post"
-          publishedAt={selectedPost.published_at}
-          author={selectedPost.author}
-          breadcrumbs={[
-            { name: "Home", url: "/" },
-            { name: "Blog", url: "/blog" },
-            { name: selectedPost.title, url: `/blog#${selectedPost.slug}` },
-          ]}
         />
         <Navbar />
         <main className="flex-1">
-          {/* SEO: Visible breadcrumbs */}
-          <div className="container pt-4">
-            <Breadcrumbs items={[
-              { label: "Home", href: "/" },
-              { label: "Blog", href: "/blog" },
-              { label: selectedPost.title },
-            ]} />
-          </div>
           {/* Blog Detail Hero */}
           <div className="relative">
             {selectedPost.cover_image && (
@@ -236,24 +218,12 @@ const BlogPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <SEO 
-        title="Spiritual Travel Blog – Yatra Guides & Tips from Odisha"
-        description="Read expert guides on Kedarnath, Kashi, Badrinath yatra from Odisha. Travel tips, packing lists, route maps, and spiritual stories by AnandaRath."
-        keywords="spiritual blog Odisha, yatra travel tips, Kedarnath yatra guide, Kashi pilgrimage blog, AnandaRath blog, tirth yatra from Odisha guide, pilgrimage packing list"
-        pageType="blog"
-        breadcrumbs={[
-          { name: "Home", url: "/" },
-          { name: "Blog", url: "/blog" },
-        ]}
+        title="Spiritual Blog - Yatra Stories & Travel Guides"
+        description="Read spiritual insights, travel tips, and stories from our pilgrimage journeys across India. Expert guides for Kedarnath, Kashi, and more."
+        keywords="spiritual blog Odisha, yatra travel tips, Kedarnath guide, Kashi yatra stories, AnandaRath blog"
       />
       <Navbar />
       <main className="flex-1">
-        {/* SEO: Visible breadcrumbs */}
-        <div className="container pt-4">
-          <Breadcrumbs items={[
-            { label: "Home", href: "/" },
-            { label: "Blog" },
-          ]} />
-        </div>
         {/* Blog Header */}
         <section className="page-header rounded-none">
           <div className="relative z-10 container">

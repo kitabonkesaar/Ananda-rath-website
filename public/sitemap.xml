@@ -1,74 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   
-  <!-- Home Page - Highest Priority -->
+  <!-- Home Page -->
   <url>
     <loc>https://anandarath.com/</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
-  <!-- Packages Listing Page -->
+  <!-- Packages Page -->
   <url>
     <loc>https://anandarath.com/packages</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-  </url>
-
-  <!-- Individual Package Pages (SEO: each package gets its own indexed URL) -->
-  <url>
-    <loc>https://anandarath.com/package/Kedarnath-Yatra-2026</loc>
-    <lastmod>2026-04-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-    <image:image>
-      <image:loc>https://anandarath.com/banners/kedarnath.jpg</image:loc>
-      <image:title>Kedarnath Yatra Package from Odisha</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://anandarath.com/package/Kashi-Ayodhya-Yatra-2026</loc>
-    <lastmod>2026-04-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://anandarath.com/package/Badrinath-Kedarnath-Do-Dham-Yatra</loc>
-    <lastmod>2026-04-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://anandarath.com/package/Dwarika-Somnath-7-Jyotirlinga-Yatra</loc>
-    <lastmod>2026-04-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://anandarath.com/package/Mathura-Vrindavan-Yatra</loc>
-    <lastmod>2026-04-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Blog Page -->
-  <url>
-    <loc>https://anandarath.com/blog</loc>
-    <lastmod>2026-04-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
   </url>
   
   <!-- Gallery Page -->
   <url>
     <loc>https://anandarath.com/gallery</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -76,7 +31,7 @@
   <!-- About Page -->
   <url>
     <loc>https://anandarath.com/about</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -84,7 +39,7 @@
   <!-- Contact Page -->
   <url>
     <loc>https://anandarath.com/contact</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -92,9 +47,17 @@
   <!-- Video Testimonials Page -->
   <url>
     <loc>https://anandarath.com/video-testimonials</loc>
-    <lastmod>2026-04-21</lastmod>
+    <lastmod>2026-04-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
+  </url>
+  
+  <!-- Blog Page -->
+  <url>
+    <loc>https://anandarath.com/blog</loc>
+    <lastmod>2026-04-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
   </url>
 
 </urlset>

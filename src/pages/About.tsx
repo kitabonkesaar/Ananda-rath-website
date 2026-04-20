@@ -2,7 +2,6 @@ import Navbar from "@/components/Navbar";
 import { WhyChooseSection, TestimonialsSection, Footer } from "@/components/HomePage";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SEO from "@/components/SEO";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import { Users, Award, Globe, Heart } from "lucide-react";
 import heroImg from "@/assets/hero-kedarnath.jpg";
 
@@ -90,23 +89,12 @@ const MissionSection = () => (
 const About = () => (
   <div className="flex flex-col min-h-screen">
     <SEO 
-      title="About AnandaRath – Odisha’s Trusted Spiritual Travel Agency"
-      description="Learn about AnandaRath, Odisha's leading spiritual travel agency since 2023. 5000+ happy pilgrims, 150+ yatras completed. Our mission is comfortable and divine yatra experiences."
-      keywords="AnandaRath about us, Odisha spiritual travel agency, spiritual tourism mission, Ananda Rath Bhubaneswar, spiritual tour organizers Odisha, trusted yatra company"
-      pageType="about"
-      breadcrumbs={[
-        { name: "Home", url: "/" },
-        { name: "About Us", url: "/about" },
-      ]}
+      title="About Us - Our Spiritual Mission"
+      description="Learn about AnandaRath, Odisha's leading spiritual travel agency. Our mission is to provide comfortable and divine yatra experiences to every devotee from Odisha."
+      keywords="AnandaRath, Odisha spiritual travel agency, spiritual tourism mission, about Ananda Rath Odisha, spiritual tour organizers Bhubaneswar"
     />
     <Navbar />
     <main className="flex-1">
-      <div className="container pt-4">
-        <Breadcrumbs items={[
-          { label: "Home", href: "/" },
-          { label: "About Us" },
-        ]} />
-      </div>
       <AboutHero />
       <OurStory />
       <WhyChooseSection />
