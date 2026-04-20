@@ -1,21 +1,32 @@
+import React, { Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
-import Index from "./pages/Index.tsx";
-import Packages from "./pages/Packages.tsx";
-import Gallery from "./pages/Gallery.tsx";
-import About from "./pages/About.tsx";
-import Contact from "./pages/Contact.tsx";
-import PackagePage from "./pages/PackagePage.tsx";
-import AdminPage from "./pages/AdminPage.tsx";
-import VideoTestimonials from "./pages/VideoTestimonials.tsx";
-import BlogPage from "./pages/BlogPage.tsx";
-import NotFound from "./pages/NotFound.tsx";
+
+const Index = React.lazy(() => import("./pages/Index.tsx"));
+const Packages = React.lazy(() => import("./pages/Packages.tsx"));
+const Gallery = React.lazy(() => import("./pages/Gallery.tsx"));
+const About = React.lazy(() => import("./pages/About.tsx"));
+const Contact = React.lazy(() => import("./pages/Contact.tsx"));
+const PackagePage = React.lazy(() => import("./pages/PackagePage.tsx"));
+const AdminPage = React.lazy(() => import("./pages/AdminPage.tsx"));
+const VideoTestimonials = React.lazy(() => import("./pages/VideoTestimonials.tsx"));
+const BlogPage = React.lazy(() => import("./pages/BlogPage.tsx"));
+const NotFound = React.lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient();
+
+const LoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="flex flex-col items-center gap-4">
+      <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+      <p className="text-primary font-medium animate-pulse">Loading AnandaRath...</p>
+    </div>
+  </div>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -24,18 +35,20 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/packages" element={<Packages />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/video-testimonials" element={<VideoTestimonials />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/package/:id" element={<PackagePage />} />
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/packages" element={<Packages />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/video-testimonials" element={<VideoTestimonials />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/package/:id" element={<PackagePage />} />
+              <Route path="/admin" element={<AdminPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>

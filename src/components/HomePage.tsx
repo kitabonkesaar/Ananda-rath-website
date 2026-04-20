@@ -89,7 +89,7 @@ export const HeroSection = () => {
   return (
     <section className="relative min-h-[92vh] flex items-center overflow-hidden">
       <div className="absolute inset-0">
-        <img src={heroImg} alt="Sacred Kedarnath Temple in the Himalayas" className="h-full w-full object-cover" width={1920} height={1080} />
+        <img src={heroImg} alt="Sacred Kedarnath Temple in the Himalayas" className="h-full w-full object-cover" width={1920} height={1080} fetchpriority="high" loading="eager" />
         <div className="absolute inset-0 gradient-hero-overlay" />
       </div>
       <div className="container relative z-10 pt-16 pb-28 md:pb-32">

@@ -72,7 +72,12 @@
 
 @layer utilities {
   .gradient-saffron {
-    background: linear-gradient(135deg, hsl(5 76% 45%), hsl(5 76% 30%));
+    background: linear-gradient(135deg, hsl(5 76% 45%), hsl(5 76% 30%), hsl(5 76% 48%), hsl(5 76% 45%));
+    background-size: 300% 100%;
+    transition: background-position 0.5s ease-in-out, transform 0.2s ease-out;
+  }
+  .gradient-saffron:hover {
+    background-position: 100% 0;
   }
   .gradient-saffron-dark {
     background: linear-gradient(135deg, hsl(5 76% 35%), hsl(5 76% 45%));
@@ -82,12 +87,18 @@
   }
   .text-gradient-saffron {
     background: linear-gradient(135deg, #ca291c, #e74c3c, #ca291c);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    animation: shimmer 3s infinite linear;
   }
   .shadow-saffron {
     box-shadow: 0 10px 40px -10px hsl(5 76% 45% / 0.35);
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  .shadow-saffron:hover {
+    box-shadow: 0 15px 50px -10px hsl(5 76% 45% / 0.5);
   }
   .shadow-card {
     box-shadow: 0 1px 3px hsl(0 0% 0% / 0.04), 0 4px 16px hsl(0 0% 0% / 0.08);
@@ -99,6 +110,15 @@
     color: hsl(5 76% 45%);
   }
 }
+
+/* Global button and link active scaling for micro-interactions */
+button, a {
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s ease, opacity 0.2s ease;
+}
+button:active:not(:disabled), a:active:not(.no-scale) {
+  transform: scale(0.96) !important;
+}
+
 
 /* ── Animations ── */
 
