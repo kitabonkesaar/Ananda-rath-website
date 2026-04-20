@@ -1,10 +1,16 @@
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { Footer } from "@/components/HomePage";
+import SEO from "@/components/SEO";
 import { Home, ArrowLeft } from "lucide-react";
 
 const NotFound = () => (
   <div className="flex flex-col min-h-screen">
+    <SEO 
+      title="404 - Page Not Found"
+      description="The page you are looking for does not exist. Return to AnandaRath to explore our spiritual yatra packages from Odisha."
+      noIndex={true}
+    />
     <Navbar />
     <main className="flex-1 flex items-center justify-center py-20">
       <div className="text-center px-4">

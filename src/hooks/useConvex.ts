@@ -60,7 +60,6 @@ export const useDeletePackage = () => {
 
 export const useSubmitInquiry = () => {
   const submit = useMutation(api.inquiries.submitInquiry);
-  const [isPending, setIsPending] = [false, () => {}];
   const mutateAsync = async (inquiry: any) => submit(inquiry);
   return { mutateAsync, isPending: false };
 };

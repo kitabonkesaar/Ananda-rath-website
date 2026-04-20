@@ -3,11 +3,12 @@ import Navbar from "@/components/Navbar";
 import SEO from "@/components/SEO";
 import { Footer } from "@/components/HomePage";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import { useVideoTestimonials, getYoutubeEmbedUrl } from "@/data/videoTestimonials";
+import { getYoutubeEmbedUrl } from "@/data/videoTestimonials";
+import { useVideoTestimonialsConvex } from "@/hooks/useConvex";
 import { Play, MapPin, X } from "lucide-react";
 
 const VideoTestimonials = () => {
-  const { videos } = useVideoTestimonials();
+  const { data: videos, isLoading } = useVideoTestimonialsConvex();
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
   return (
@@ -33,7 +34,12 @@ const VideoTestimonials = () => {
         {/* Video Grid */}
         <section className="py-24">
           <div className="container">
-            {!videos.length ? (
+            {isLoading ? (
+              <div className="text-center py-20">
+                <div className="mx-auto mb-6 h-12 w-12 rounded-full border-b-2 border-primary animate-spin"></div>
+                <h3 className="text-xl font-semibold text-foreground mb-2">Loading videos...</h3>
+              </div>
+            ) : !videos?.length ? (
               <div className="text-center py-20">
                 <div className="mx-auto mb-6 h-24 w-24 rounded-full bg-muted flex items-center justify-center">
                   <Play className="h-10 w-10 text-muted-foreground/40" />
@@ -45,20 +51,20 @@ const VideoTestimonials = () => {
               </div>
             ) : (
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {videos
+                {[...videos]
                   .sort((a, b) => a.display_order - b.display_order)
                   .map((video) => {
                     const embedUrl = getYoutubeEmbedUrl(video.youtube_url);
                     const thumbnailUrl = `https://img.youtube.com/vi/${extractVideoId(video.youtube_url)}/hqdefault.jpg`;
                     
                     return (
-                      <div key={video.id} className="rounded-2xl bg-card shadow-card card-interactive overflow-hidden group">
+                      <div key={video._id} className="rounded-2xl bg-card shadow-card card-interactive overflow-hidden group">
                         {/* Video Thumbnail */}
                         <div
                           className="relative cursor-pointer aspect-video bg-black"
-                          onClick={() => setActiveVideo(video.id === activeVideo ? null : video.id)}
+                          onClick={() => setActiveVideo(video._id === activeVideo ? null : video._id)}
                         >
-                          {activeVideo === video.id && embedUrl ? (
+                          {activeVideo === video._id && embedUrl ? (
                             <iframe
                               src={`${embedUrl}?autoplay=1`}
                               title={video.title || video.customer_name}
@@ -121,6 +127,9 @@ function extractVideoId(url: string): string {
   try {
     const parsed = new URL(url);
     if (parsed.hostname.includes("youtube.com")) {
+      if (parsed.pathname.startsWith("/shorts/")) {
+        return parsed.pathname.split("/")[2] || "";
+      }
       return parsed.searchParams.get("v") || "";
     } else if (parsed.hostname.includes("youtu.be")) {
       return parsed.pathname.slice(1);

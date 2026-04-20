@@ -39,8 +39,8 @@ const Navbar = () => {
       }`}
     >
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center group">
-          <img src={logo} alt="AnandaRath" className="h-[52px] w-auto transition-transform group-hover:scale-[1.02]" />
+        <Link to="/" className="flex items-center group" aria-label="AnandaRath Home">
+          <img src={logo} alt="AnandaRath - Spiritual Tourism" className="h-[52px] w-auto transition-transform group-hover:scale-[1.02]" />
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">
@@ -62,13 +62,22 @@ const Navbar = () => {
           </div>
         </div>
 
-        <button onClick={() => setOpen(!open)} className="md:hidden text-foreground p-2 rounded-lg hover:bg-muted transition-colors">
+        <button 
+          onClick={() => setOpen(!open)} 
+          className="md:hidden text-foreground p-2 rounded-lg hover:bg-muted transition-colors"
+          aria-label={open ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={open}
+          aria-controls="mobile-navigation"
+        >
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
 
       {/* Mobile menu */}
       <div
+        id="mobile-navigation"
+        role="navigation"
+        aria-label="Mobile navigation"
         className={`border-t border-border bg-background md:hidden overflow-hidden transition-all duration-300 ${
           open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}

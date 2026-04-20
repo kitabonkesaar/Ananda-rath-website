@@ -103,9 +103,13 @@ export const getYoutubeEmbedUrl = (url: string): string | null => {
   try {
     const parsed = new URL(url);
     let videoId: string | null = null;
-
+    
     if (parsed.hostname.includes("youtube.com")) {
-      videoId = parsed.searchParams.get("v");
+      if (parsed.pathname.startsWith("/shorts/")) {
+        videoId = parsed.pathname.split("/")[2];
+      } else {
+        videoId = parsed.searchParams.get("v");
+      }
     } else if (parsed.hostname.includes("youtu.be")) {
       videoId = parsed.pathname.slice(1);
     }
@@ -123,7 +127,11 @@ export const getYoutubeThumbnail = (url: string): string | null => {
     let videoId: string | null = null;
 
     if (parsed.hostname.includes("youtube.com")) {
-      videoId = parsed.searchParams.get("v");
+      if (parsed.pathname.startsWith("/shorts/")) {
+        videoId = parsed.pathname.split("/")[2];
+      } else {
+        videoId = parsed.searchParams.get("v");
+      }
     } else if (parsed.hostname.includes("youtu.be")) {
       videoId = parsed.pathname.slice(1);
     }

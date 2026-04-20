@@ -22,8 +22,21 @@ export const submitInquiry = mutation({
     package_id: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Server-side validation
+    const name = args.name.trim().slice(0, 100);
+    const phone = args.phone.trim().replace(/\D/g, "").slice(0, 15);
+    
+    if (!name || name.length < 2) {
+      throw new Error("Invalid name: must be at least 2 characters");
+    }
+    if (!phone || phone.length < 10) {
+      throw new Error("Invalid phone: must be at least 10 digits");
+    }
+
     return await ctx.db.insert("inquiries", {
       ...args,
+      name,
+      phone,
       status: "new",
       created_at: Date.now(),
     });

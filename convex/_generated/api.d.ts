@@ -8,12 +8,14 @@
  * @module
  */
 
+import type * as ai from "../ai.js";
 import type * as blog from "../blog.js";
 import type * as gallery from "../gallery.js";
 import type * as heroConfig from "../heroConfig.js";
 import type * as inquiries from "../inquiries.js";
 import type * as packages from "../packages.js";
 import type * as seed from "../seed.js";
+import type * as seedBlogs from "../seedBlogs.js";
 import type * as testimonials from "../testimonials.js";
 import type * as videoTestimonials from "../videoTestimonials.js";
 
@@ -24,12 +26,14 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  ai: typeof ai;
   blog: typeof blog;
   gallery: typeof gallery;
   heroConfig: typeof heroConfig;
   inquiries: typeof inquiries;
   packages: typeof packages;
   seed: typeof seed;
+  seedBlogs: typeof seedBlogs;
   testimonials: typeof testimonials;
   videoTestimonials: typeof videoTestimonials;
 }>;

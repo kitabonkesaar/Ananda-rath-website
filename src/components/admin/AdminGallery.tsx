@@ -86,7 +86,7 @@ const AdminGallery = () => {
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {photos?.map((photo) => (
           <div key={photo.id} className="group relative overflow-hidden rounded-xl">
-            <img src={photo.image_url} alt={photo.caption || ""} className="h-48 w-full object-cover" loading="lazy" />
+            <img src={photo.image_url} alt={photo.caption || ""} className="h-48 w-full object-cover" loading="lazy" onError={(e) => { e.currentTarget.src = "https://placehold.co/600x400/f1f5f9/94a3b8?text=Image+Not+Found"; }} />
             <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/40 transition-colors flex items-center justify-center">
               <button
                 onClick={() => handleDelete(photo.id)}

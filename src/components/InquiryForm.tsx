@@ -60,20 +60,29 @@ const InquiryForm = ({ packageName, packageId }: InquiryFormProps) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-2xl bg-card p-6 shadow-card">
+    <form onSubmit={handleSubmit} className="rounded-2xl bg-card p-6 shadow-card" aria-label="Inquiry Form">
       <h3 className="mb-4 text-lg font-bold text-foreground">📋 Inquiry Form</h3>
       <div className="space-y-3">
+        <label htmlFor="inq-name" className="sr-only">Your Name</label>
         <input
+          id="inq-name"
           type="text" placeholder="Your Name *" required maxLength={100}
+          aria-label="Your full name"
           value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
           className="w-full rounded-lg border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         />
+        <label htmlFor="inq-phone" className="sr-only">Phone Number</label>
         <input
+          id="inq-phone"
           type="tel" placeholder="Phone Number *" required maxLength={15} pattern="[0-9]{10,15}"
+          aria-label="Your phone number"
           value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })}
           className="w-full rounded-lg border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         />
+        <label htmlFor="inq-travelers" className="sr-only">Number of Travelers</label>
         <select
+          id="inq-travelers"
+          aria-label="Number of travelers"
           value={form.travelers} onChange={(e) => setForm({ ...form, travelers: e.target.value })}
           className="w-full rounded-lg border border-input bg-background px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         >
@@ -82,13 +91,20 @@ const InquiryForm = ({ packageName, packageId }: InquiryFormProps) => {
           ))}
           <option value="10+">10+ Travelers</option>
         </select>
+        <label htmlFor="inq-date" className="sr-only">Preferred Travel Date</label>
         <input
-          type="date" value={form.date}
+          id="inq-date"
+          type="date" 
+          aria-label="Preferred travel date"
+          value={form.date}
           onChange={(e) => setForm({ ...form, date: e.target.value })}
           className="w-full rounded-lg border border-input bg-background px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         />
+        <label htmlFor="inq-pickup" className="sr-only">Pickup Location</label>
         <input
+          id="inq-pickup"
           type="text" placeholder="Pickup Location (e.g. Bhubaneswar)" maxLength={100}
+          aria-label="Your pickup location"
           value={form.pickup} onChange={(e) => setForm({ ...form, pickup: e.target.value })}
           className="w-full rounded-lg border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         />

@@ -23,6 +23,7 @@ export default defineSchema({
     exclusions: v.optional(v.array(v.string())),
     itinerary: v.optional(v.any()),
     is_active: v.boolean(),
+    is_full: v.optional(v.boolean()),
     display_order: v.number(),
   })
     .index("by_slug", ["slug"])

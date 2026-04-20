@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Clock, MapPin, Star, Bus, Utensils, Shield, Heart, Image, Phone, Mail, MapPinned, ArrowRight, Sparkles, Send, Camera } from "lucide-react";
+import { Clock, MapPin, Star, Bus, Utensils, Shield, Heart, Image, Phone, Mail, MapPinned, ArrowRight, Sparkles, Send, Camera, X } from "lucide-react";
 import WhatsAppButton from "./WhatsAppButton";
 import heroImg from "@/assets/hero-kedarnath.jpg";
 import logo from "@/assets/logo.png";
+import jagannathIcon from "@/assets/jagannath-icon.png";
 import { usePackages, useTestimonials, useGalleryPhotos, useSubmitInquiry, useHeroConfig } from "@/hooks/useConvex";
 import { WHATSAPP_NUMBER } from "@/data/config";
 
@@ -116,8 +117,13 @@ export const HeroSection = () => {
           </div>
 
           {/* Right side - Countdown + Form */}
-          <div className="animate-fade-in-up animate-delay-200">
-            <div className="rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 p-6 md:p-8 shadow-2xl max-w-md mx-auto lg:ml-auto">
+          <div className="animate-fade-in-up animate-delay-200 relative mt-16 lg:mt-0 lg:ml-auto max-w-md w-full">
+            {/* Jagannath Icon overlapping the top border */}
+            <div className="absolute -top-[3.5rem] left-1/2 -translate-x-1/2 z-20 w-[7rem] h-[7rem] drop-shadow-2xl">
+               <img src={jagannathIcon} alt="Jai Jagannath" className="w-full h-full object-contain hover:scale-105 transition-transform duration-300" />
+            </div>
+
+            <div className="rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 p-6 md:p-8 pt-12 shadow-2xl mx-auto backdrop-brightness-75">
               {/* Countdown Timer */}
               <div className="mb-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60 mb-3 text-center">⏰ {heroConfig?.timer_title ?? "NEXT YATRA DEPARTING IN"}</p>
@@ -244,11 +250,15 @@ export const FeaturedPackagesSection = () => {
               <Link to={`/package/${pkg.slug}`} key={pkg.id} className="group overflow-hidden rounded-2xl bg-card shadow-card card-interactive">
                 <div className="relative overflow-hidden">
                   {pkg.image_url ? (
-                    <img src={pkg.image_url} alt={pkg.title} className="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                    <img src={pkg.image_url} alt={pkg.title} className="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" onError={(e) => { e.currentTarget.src = "https://placehold.co/600x400/f1f5f9/94a3b8?text=Image+Not+Found"; }} />
                   ) : (
                     <div className="h-56 w-full bg-muted flex items-center justify-center"><Image className="h-12 w-12 text-muted-foreground/40" /></div>
                   )}
-                  {pkg.seats_left !== null && pkg.seats_left > 0 && pkg.seats_left <= 15 && (
+                  {pkg.is_full ? (
+                    <div className="absolute top-3 right-3 rounded-full bg-destructive px-3 py-1 text-xs font-bold text-destructive-foreground shadow-lg animate-pulse">
+                      SOLD OUT
+                    </div>
+                  ) : pkg.seats_left !== null && pkg.seats_left > 0 && pkg.seats_left <= 15 && (
                     <div className="absolute top-3 right-3 rounded-full bg-primary px-3 py-1 text-xs font-bold text-white shadow-lg">
                       {pkg.seats_left} seats left
                     </div>
@@ -331,11 +341,15 @@ export const PackagesSection = () => {
               <Link to={`/package/${pkg.slug}`} key={pkg.id} className="group overflow-hidden rounded-2xl bg-card shadow-card card-interactive">
                 <div className="relative overflow-hidden">
                   {pkg.image_url ? (
-                    <img src={pkg.image_url} alt={pkg.title} className="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                    <img src={pkg.image_url} alt={pkg.title} className="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" onError={(e) => { e.currentTarget.src = "https://placehold.co/600x400/f1f5f9/94a3b8?text=Image+Not+Found"; }} />
                   ) : (
                     <div className="h-56 w-full bg-muted flex items-center justify-center"><Image className="h-12 w-12 text-muted-foreground/40" /></div>
                   )}
-                  {pkg.seats_left !== null && pkg.seats_left > 0 && pkg.seats_left <= 15 && (
+                  {pkg.is_full ? (
+                    <div className="absolute top-3 right-3 rounded-full bg-destructive px-3 py-1 text-xs font-bold text-destructive-foreground shadow-lg animate-pulse">
+                      SOLD OUT
+                    </div>
+                  ) : pkg.seats_left !== null && pkg.seats_left > 0 && pkg.seats_left <= 15 && (
                     <div className="absolute top-3 right-3 rounded-full bg-primary px-3 py-1 text-xs font-bold text-white shadow-lg">
                       {pkg.seats_left} seats left
                     </div>
@@ -375,6 +389,18 @@ export const PackagesSection = () => {
 // ── Gallery Section ──
 export const GallerySection = () => {
   const { data: photos } = useGalleryPhotos();
+  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
+
+  // Close lightbox on escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedPhoto(null);
+    };
+    if (selectedPhoto) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedPhoto]);
 
   return (
     <section className="py-24">
@@ -403,21 +429,52 @@ export const GallerySection = () => {
         ) : (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {photos.map((photo) => (
-              <div key={photo.id} className="group relative overflow-hidden rounded-xl card-interactive cursor-pointer">
+              <div 
+                key={photo.id} 
+                className="group relative overflow-hidden rounded-xl card-interactive cursor-zoom-in"
+                onClick={() => setSelectedPhoto(photo.image_url)}
+              >
                 <img
                   src={photo.image_url}
                   alt={photo.caption || "Yatra photo"}
                   className="h-48 w-full object-cover transition-transform duration-700 group-hover:scale-110 md:h-64"
                   loading="lazy"
+                  onError={(e) => { e.currentTarget.src = "https://placehold.co/600x400/f1f5f9/94a3b8?text=Image+Not+Found"; }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <div className="h-12 w-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                    <span className="text-white text-lg font-bold">+</span>
+                  </div>
+                </div>
                 {photo.caption && (
-                  <div className="absolute inset-x-0 bottom-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                  <div className="absolute inset-x-0 bottom-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-10">
                     <p className="text-xs text-white font-medium">{photo.caption}</p>
                   </div>
                 )}
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Lightbox Modal */}
+        {selectedPhoto && (
+          <div 
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4 backdrop-blur-md animate-in fade-in duration-200"
+            onClick={() => setSelectedPhoto(null)}
+          >
+            <button 
+              className="absolute top-6 right-6 text-white/50 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2.5 transition-all"
+              onClick={(e) => { e.stopPropagation(); setSelectedPhoto(null); }}
+              aria-label="Close"
+            >
+              <X className="h-6 w-6" />
+            </button>
+            <img 
+              src={selectedPhoto} 
+              alt="Full size gallery view" 
+              className="max-h-[90vh] max-w-full rounded-lg object-contain shadow-2xl animate-in zoom-in-95 duration-200" 
+              onClick={(e) => e.stopPropagation()}
+            />
           </div>
         )}
       </div>
@@ -484,7 +541,7 @@ export const TestimonialsSection = () => {
               <p className="mb-5 text-sm leading-relaxed text-muted-foreground italic">"{t.text}"</p>
               <div className="flex items-center gap-3 border-t border-border pt-4">
                 {t.photo_url ? (
-                  <img src={t.photo_url} alt={t.name} className="h-10 w-10 rounded-full object-cover ring-2 ring-primary/20" loading="lazy" />
+                  <img src={t.photo_url} alt={t.name} className="h-10 w-10 rounded-full object-cover ring-2 ring-primary/20" loading="lazy" onError={(e) => { e.currentTarget.src = "https://placehold.co/100x100/f1f5f9/94a3b8?text=" + (t.name?.charAt(0) || "?"); }} />
                 ) : (
                   <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
                     {t.name?.charAt(0)}
@@ -582,14 +639,14 @@ export const Footer = () => (
           <ul className="space-y-3">
             <li className="flex items-start gap-3">
               <Phone className="h-4 w-4 text-white/40 mt-0.5 shrink-0" />
-              <a href={`tel:+${WHATSAPP_NUMBER}`} className="text-sm text-white/50 hover:text-white transition-colors">
-                +91 98765 43210
+              <a href={`tel:+${WHATSAPP_NUMBER}`} className="text-sm text-white/50 hover:text-white transition-colors" aria-label="Call AnandaRath">
+                +{WHATSAPP_NUMBER}
               </a>
             </li>
             <li className="flex items-start gap-3">
               <Mail className="h-4 w-4 text-white/40 mt-0.5 shrink-0" />
-              <a href="mailto:info@anandarath.com" className="text-sm text-white/50 hover:text-white transition-colors">
-                info@anandarath.com
+              <a href="mailto:anandarathtours@gmail.com" className="text-sm text-white/50 hover:text-white transition-colors" aria-label="Email AnandaRath">
+                anandarathtours@gmail.com
               </a>
             </li>
             <li className="flex items-start gap-3">

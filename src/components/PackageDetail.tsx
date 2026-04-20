@@ -42,7 +42,7 @@ const PackageDetail = () => {
       {/* Hero */}
       <div className="relative h-72 md:h-96">
         {pkg.image_url ? (
-          <img src={pkg.image_url} alt={pkg.title} className="h-full w-full object-cover" />
+          <img src={pkg.image_url} alt={pkg.title} className="h-full w-full object-cover" onError={(e) => { e.currentTarget.src = "https://placehold.co/1200x600/f1f5f9/94a3b8?text=Image+Not+Found"; }} />
         ) : (
           <div className="h-full w-full bg-muted flex items-center justify-center"><Image className="h-16 w-16 text-muted-foreground/40" /></div>
         )}
@@ -63,7 +63,9 @@ const PackageDetail = () => {
             <div className="flex flex-wrap gap-4 rounded-2xl bg-card p-5 shadow-card">
               <div className="flex items-center gap-2 text-sm"><Clock className="h-4 w-4 text-primary" /> {pkg.duration}</div>
               <div className="flex items-center gap-2 text-sm"><MapPin className="h-4 w-4 text-primary" /> {pkg.starting_from}</div>
-              {pkg.seats_left !== null && pkg.seats_left > 0 && (
+              {pkg.is_full ? (
+                <div className="flex items-center gap-2 text-sm font-bold text-destructive"><Users className="h-4 w-4 text-destructive" /> 🚨 House Full / Sold Out</div>
+              ) : pkg.seats_left !== null && pkg.seats_left > 0 && (
                 <div className="flex items-center gap-2 text-sm"><Users className="h-4 w-4 text-accent" /> Only {pkg.seats_left} seats left!</div>
               )}
               <div className="ml-auto text-right">
@@ -110,32 +112,40 @@ const PackageDetail = () => {
             )}
 
             {/* Inclusions / Exclusions */}
-            <div className="grid gap-6 md:grid-cols-2">
-              {pkg.inclusions && pkg.inclusions.length > 0 && (
-                <div className="rounded-2xl bg-card p-5 shadow-card">
-                  <h3 className="mb-3 text-lg font-bold text-foreground">✅ Included</h3>
-                  <ul className="space-y-2">
-                    {pkg.inclusions.map((item) => (
-                      <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-saffron" /> {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {pkg.exclusions && pkg.exclusions.length > 0 && (
-                <div className="rounded-2xl bg-card p-5 shadow-card">
-                  <h3 className="mb-3 text-lg font-bold text-foreground">❌ Not Included</h3>
-                  <ul className="space-y-2">
-                    {pkg.exclusions.map((item) => (
-                      <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <X className="mt-0.5 h-4 w-4 shrink-0 text-destructive" /> {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
+            {((pkg.inclusions && pkg.inclusions.length > 0) || (pkg.exclusions && pkg.exclusions.length > 0)) && (
+              <div className="space-y-6">
+                {pkg.inclusions && pkg.inclusions.length > 0 && (
+                  <div>
+                    <h2 className="mb-4 text-2xl font-bold text-foreground">✅ What's Included</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {pkg.inclusions.map((item) => (
+                        <div key={item} className="flex items-center gap-3 rounded-xl bg-green-50 border border-green-100 p-3.5 transition-all hover:shadow-md hover:-translate-y-0.5">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-700">
+                            <Check className="h-5 w-5" />
+                          </div>
+                          <span className="text-sm font-medium text-foreground">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {pkg.exclusions && pkg.exclusions.length > 0 && (
+                  <div>
+                    <h2 className="mb-4 text-2xl font-bold text-foreground">❌ What's NOT Included</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {pkg.exclusions.map((item) => (
+                        <div key={item} className="flex items-center gap-3 rounded-xl bg-red-50 border border-red-100 p-3.5 transition-all hover:shadow-md hover:-translate-y-0.5">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-600">
+                            <X className="h-5 w-5" />
+                          </div>
+                          <span className="text-sm font-medium text-foreground">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Sidebar */}
@@ -144,9 +154,11 @@ const PackageDetail = () => {
               <div className="rounded-2xl gradient-saffron-dark p-5 text-center">
                 <p className="text-sm text-primary-foreground/80">Next Departure</p>
                 <p className="text-2xl font-bold text-primary-foreground">{pkg.next_departure}</p>
-                {pkg.seats_left !== null && pkg.seats_left > 0 && (
+                {pkg.is_full ? (
+                  <p className="mt-2 text-sm font-extrabold text-red-300">🚨 COMPLETELY BOOKED 🚨</p>
+                ) : pkg.seats_left !== null && pkg.seats_left > 0 ? (
                   <p className="mt-2 text-sm font-semibold text-primary-foreground">⚡ Only {pkg.seats_left} seats left!</p>
-                )}
+                ) : null}
               </div>
             )}
             <div className="space-y-3">

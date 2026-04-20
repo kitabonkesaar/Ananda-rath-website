@@ -3,7 +3,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { 
   LogOut, Package, Users, MessageSquare, Image as ImageIcon, 
   LayoutDashboard, Youtube, Info, Search, Bell, Menu,
-  Clock, Activity, Maximize, Home, ChevronRight, FileText
+  Clock, Activity, Maximize, Home, ChevronRight, FileText,
+  Eye, EyeOff
 } from "lucide-react";
 import { useAdminInquiries, useAdminPackages, useAdminTestimonials, useAdminBlogPosts } from "@/hooks/useConvex";
 import AdminPackages from "@/components/admin/AdminPackages";
@@ -14,9 +15,9 @@ import AdminVideoTestimonials from "@/components/admin/AdminVideoTestimonials";
 import AdminHeroConfig from "@/components/admin/AdminHeroConfig";
 import AdminBlog from "@/components/admin/AdminBlog";
 
-// Demo credentials
-const DEMO_EMAIL = "admin@anandarath.com";
-const DEMO_PASSWORD = "admin123";
+// Demo credentials — not exposed in UI
+const DEMO_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || "admin@anandarath.com";
+const DEMO_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "admin123";
 
 const navGroups = [
   {
@@ -170,6 +171,7 @@ const AdminPage = () => {
   const [signingIn, setSigningIn] = useState(false);
   const [demoMode, setDemoMode] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const isDemoLoggedIn = demoMode;
   const isLoggedIn = !!session || isDemoLoggedIn;
@@ -192,7 +194,7 @@ const AdminPage = () => {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#f8f8f8]">
         <div className="w-full max-w-md rounded-[20px] bg-white p-8 shadow-[0_10px_30px_rgba(0,0,0,0.05)] text-center border border-slate-100">
-          <div className="mx-auto mb-6 w-16 h-16 bg-gradient-to-tr from-[#ca291c] to-[#ef4444] rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+          <div className="mx-auto mb-6 w-16 h-16 bg-gradient-to-tr from-[#ca291c] to-[#ef4444] rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/20">
              <LayoutDashboard className="h-8 w-8 text-white" />
           </div>
           <h1 className="mb-2 text-[#000000] text-2xl font-bold font-sans">Welcome to admin<span className="text-[#ca291c]">ty</span></h1>
@@ -224,37 +226,40 @@ const AdminPage = () => {
                 name="email" 
                 type="email" 
                 required 
+                autoComplete="username"
                 className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-[#ca291c]/50 focus:bg-white focus:border-[#ca291c]"
-                placeholder="admin@anandarath.com"
-                defaultValue={DEMO_EMAIL}
+                placeholder="Enter admin email"
               />
             </div>
             <div>
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Password</p>
-              <input 
-                name="password" 
-                type="password" 
-                required 
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-[#ca291c]/50 focus:bg-white focus:border-[#ca291c]"
-                placeholder="••••••••"
-                defaultValue={DEMO_PASSWORD}
-              />
+              <div className="relative">
+                <input 
+                  name="password" 
+                  type={showPassword ? "text" : "password"} 
+                  required 
+                  autoComplete="current-password"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 text-sm text-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-[#ca291c]/50 focus:bg-white focus:border-[#ca291c]"
+                  placeholder="Enter password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
             
             <button
               type="submit"
               disabled={signingIn}
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#ca291c] to-[#ef4444] px-5 py-3.5 font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#ca291c] to-[#ef4444] px-5 py-3.5 font-bold text-white shadow-lg shadow-red-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
             >
               {signingIn ? "Authenticating..." : "Sign in to Dashboard"}
             </button>
-            
-            <div className="mt-4 rounded-xl bg-amber-50 border border-amber-100 p-4 text-center">
-              <p className="text-xs font-semibold text-amber-700 mb-1">Demo Access Enabled</p>
-              <p className="text-[11px] text-amber-600/80">
-                Click <b>Sign in to Dashboard</b> to enter using preset credentials.
-              </p>
-            </div>
           </form>
         </div>
       </div>
@@ -353,6 +358,7 @@ const AdminPage = () => {
           <div className="flex items-center gap-2 lg:gap-4">
             <button 
               onClick={() => setSidebarOpen(true)}
+              aria-label="Open navigation menu"
               className="p-2.5 text-slate-400 hover:bg-slate-50 hover:text-slate-600 rounded-lg lg:hidden transition-colors"
             >
               <Menu className="w-5 h-5" />
