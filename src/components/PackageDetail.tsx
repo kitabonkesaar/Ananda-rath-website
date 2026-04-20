@@ -4,6 +4,7 @@ import WhatsAppButton, { CallButton } from "@/components/WhatsAppButton";
 import { Clock, MapPin, Check, X, ArrowLeft, Users, Image } from "lucide-react";
 import InquiryForm from "@/components/InquiryForm";
 import SEO from "@/components/SEO";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface ItineraryDay {
   day: number;
@@ -33,12 +34,28 @@ const PackageDetail = () => {
 
   return (
     <div className="pb-20">
+      {/* SEO: TouristTrip structured data + breadcrumbs for rich results */}
       <SEO 
-        title={`${pkg.title} - Yatra Package`}
-        description={pkg.subtitle || `Book ${pkg.title} yatra from Odisha. ${pkg.duration} journey starting at ${pkg.price}. Includes AC sleeper bus, meals, and stay.`}
-        keywords={`${pkg.title} yatra package, spiritual tour ${pkg.title}, Odisha to ${pkg.title}, AnandaRath ${pkg.title}`}
+        title={`${pkg.title} – Yatra Package from Odisha`}
+        description={pkg.subtitle || `Book ${pkg.title} yatra from Odisha. ${pkg.duration} journey starting at ${pkg.price}. AC Sleeper Bus, Odia meals, guided darshan included.`}
+        keywords={`${pkg.title} yatra package, ${pkg.title} yatra from Odisha, Odisha to ${pkg.title} tour, AnandaRath ${pkg.title}, ${pkg.title} pilgrimage price, ${pkg.title} trip cost`}
         ogImage={pkg.image_url}
+        pageType="package-detail"
+        price={pkg.price}
+        breadcrumbs={[
+          { name: "Home", url: "/" },
+          { name: "Packages", url: "/packages" },
+          { name: pkg.title, url: `/package/${pkg.slug}` },
+        ]}
       />
+      {/* SEO: Visible breadcrumbs for user navigation + crawl depth */}
+      <div className="container pt-4 pb-2">
+        <Breadcrumbs items={[
+          { label: "Home", href: "/" },
+          { label: "Packages", href: "/packages" },
+          { label: pkg.title },
+        ]} />
+      </div>
       {/* Hero */}
       <div className="relative h-72 md:h-96">
         {pkg.image_url ? (

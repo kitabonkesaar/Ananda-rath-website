@@ -3,6 +3,7 @@ import { Footer } from "@/components/HomePage";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import InquiryForm from "@/components/InquiryForm";
 import SEO from "@/components/SEO";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { Phone, Mail, MapPinned, Clock, MessageCircle } from "lucide-react";
 import { WHATSAPP_NUMBER } from "@/data/config";
 
@@ -52,12 +53,23 @@ const contactMethods = [
 const Contact = () => (
   <div className="flex flex-col min-h-screen">
     <SEO 
-      title="Contact Us - Plan Your Yatra"
-      description="Contact AnandaRath for spiritual yatra bookings from Odisha. Reach us via WhatsApp, phone or visit our office in Bhubaneswar."
-      keywords="contact AnandaRath, spiritual tour inquiry, yatra booking Odisha, Bhubaneswar travel agency contact"
+      title="Contact AnandaRath – Book Your Yatra from Odisha"
+      description="Contact AnandaRath for spiritual yatra bookings from Odisha. Call +91 8249529220 or WhatsApp us. Visit our Bhubaneswar office. Quick response guaranteed!"
+      keywords="contact AnandaRath, yatra booking Odisha, Bhubaneswar travel agency contact, spiritual tour inquiry, AnandaRath phone number, book pilgrimage Odisha"
+      pageType="contact"
+      breadcrumbs={[
+        { name: "Home", url: "/" },
+        { name: "Contact Us", url: "/contact" },
+      ]}
     />
     <Navbar />
     <main className="flex-1">
+      <div className="container pt-4">
+        <Breadcrumbs items={[
+          { label: "Home", href: "/" },
+          { label: "Contact Us" },
+        ]} />
+      </div>
       <ContactHero />
 
       <section className="py-24">
