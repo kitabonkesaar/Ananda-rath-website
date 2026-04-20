@@ -1,24 +1,38 @@
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import Navbar from "@/components/Navbar";
+import { Footer } from "@/components/HomePage";
+import { Home, ArrowLeft } from "lucide-react";
 
-const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
-  }, [location.pathname]);
-
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
-        <a href="/" className="text-primary underline hover:text-primary/90">
-          Return to Home
-        </a>
+const NotFound = () => (
+  <div className="flex flex-col min-h-screen">
+    <Navbar />
+    <main className="flex-1 flex items-center justify-center py-20">
+      <div className="text-center px-4">
+        <p className="text-8xl font-extrabold text-primary/20 mb-4">404</p>
+        <h1 className="text-2xl font-bold text-foreground mb-2">Page Not Found</h1>
+        <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+          The page you're looking for doesn't exist. It might have been removed or the URL might be incorrect.
+        </p>
+        <div className="flex flex-wrap gap-4 justify-center">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 rounded-full gradient-saffron px-6 py-3 text-sm font-semibold text-white shadow-saffron transition-all hover:scale-105"
+          >
+            <Home className="h-4 w-4" />
+            Go to Homepage
+          </Link>
+          <button
+            onClick={() => window.history.back()}
+            className="inline-flex items-center gap-2 rounded-full border-2 border-border px-6 py-3 text-sm font-semibold text-foreground transition-all hover:bg-muted"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Go Back
+          </button>
+        </div>
       </div>
-    </div>
-  );
-};
+    </main>
+    <Footer />
+  </div>
+);
 
 export default NotFound;

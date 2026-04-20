@@ -1,17 +1,16 @@
 import Navbar from "@/components/Navbar";
-import PackageDetail from "@/components/PackageDetail";
+import { PackagesSection, Footer } from "@/components/HomePage";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import { Footer } from "@/components/HomePage";
 
-const PackagePage = () => (
+const Packages = () => (
   <div className="flex flex-col min-h-screen">
     <Navbar />
     <main className="flex-1">
-      <PackageDetail />
+      <PackagesSection />
     </main>
     <WhatsAppButton variant="floating" />
     <Footer />
   </div>
 );
 
-export default PackagePage;
+export default Packages;

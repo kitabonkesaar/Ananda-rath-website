@@ -37,15 +37,15 @@ const PackageDetail = () => {
         {pkg.image_url ? (
           <img src={pkg.image_url} alt={pkg.title} className="h-full w-full object-cover" />
         ) : (
-          <div className="h-full w-full bg-muted flex items-center justify-center"><Image className="h-16 w-16 text-muted-foreground" /></div>
+          <div className="h-full w-full bg-muted flex items-center justify-center"><Image className="h-16 w-16 text-muted-foreground/40" /></div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 to-transparent" />
+        <div className="absolute inset-0 gradient-hero-overlay" />
         <div className="absolute bottom-6 left-0 right-0 container">
-          <Link to="/" className="mb-3 inline-flex items-center gap-1 text-sm text-primary-foreground/80 hover:text-primary-foreground">
+          <Link to="/packages" className="mb-3 inline-flex items-center gap-1 text-sm text-white/70 hover:text-white transition-colors">
             <ArrowLeft className="h-4 w-4" /> Back to Packages
           </Link>
-          <h1 className="text-3xl font-bold text-primary-foreground md:text-4xl">{pkg.title}</h1>
-          {pkg.subtitle && <p className="text-primary-foreground/70">{pkg.subtitle}</p>}
+          <h1 className="text-3xl font-bold text-white md:text-4xl">{pkg.title}</h1>
+          {pkg.subtitle && <p className="text-white/60 mt-1">{pkg.subtitle}</p>}
         </div>
       </div>
 

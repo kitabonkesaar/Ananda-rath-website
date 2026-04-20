@@ -1,13 +1,21 @@
 import Navbar from "@/components/Navbar";
-import HomePage from "@/components/HomePage";
+import { HeroSection, StatsSection, FeaturedPackagesSection, WhyChooseSection, TestimonialsSection, CTASection, Footer } from "@/components/HomePage";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
 const Index = () => (
-  <>
+  <div className="flex flex-col min-h-screen">
     <Navbar />
-    <HomePage />
+    <main className="flex-1">
+      <HeroSection />
+      <StatsSection />
+      <FeaturedPackagesSection />
+      <WhyChooseSection />
+      <TestimonialsSection />
+      <CTASection />
+    </main>
     <WhatsAppButton variant="floating" />
-  </>
+    <Footer />
+  </div>
 );
 
 export default Index;

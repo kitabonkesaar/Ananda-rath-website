@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { lovable } from "@/integrations/lovable/index";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
 import { LogOut, Package, Users, MessageSquare, Image, LayoutDashboard } from "lucide-react";
@@ -30,22 +30,50 @@ const AdminPage = () => {
         <div className="w-full max-w-md rounded-2xl bg-card p-8 shadow-card text-center">
           <LayoutDashboard className="mx-auto mb-4 h-12 w-12 text-primary" />
           <h1 className="mb-2 text-2xl font-bold text-foreground">Admin Panel</h1>
-          <p className="mb-6 text-sm text-muted-foreground">Sign in with Google to access the admin dashboard</p>
-          <button
-            onClick={async () => {
+          <p className="mb-6 text-sm text-muted-foreground">Sign in with your email and password</p>
+          <form 
+            onSubmit={async (e) => {
+              e.preventDefault();
               setSigningIn(true);
-              const result = await lovable.auth.signInWithOAuth("google", {
-                redirect_uri: window.location.origin + "/admin",
+              const { error } = await supabase.auth.signInWithPassword({
+                email: e.currentTarget.email.value,
+                password: e.currentTarget.password.value,
               });
-              if (result.error) {
+              if (error) {
+                alert(error.message);
                 setSigningIn(false);
               }
             }}
-            disabled={signingIn}
-            className="flex w-full items-center justify-center gap-2 rounded-lg gradient-saffron px-5 py-3 font-semibold text-primary-foreground shadow-saffron transition-all hover:scale-[1.02] disabled:opacity-50"
+            className="flex flex-col gap-4 text-left"
           >
-            {signingIn ? "Signing in..." : "Sign in with Google"}
-          </button>
+            <div>
+              <label className="text-sm font-medium text-foreground">Email Address</label>
+              <input 
+                name="email" 
+                type="email" 
+                required 
+                className="mt-1 w-full rounded-md border p-2 text-sm bg-background text-foreground"
+                placeholder="admin@example.com"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-foreground">Password</label>
+              <input 
+                name="password" 
+                type="password" 
+                required 
+                className="mt-1 w-full rounded-md border p-2 text-sm bg-background text-foreground"
+                placeholder="••••••••"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={signingIn}
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 font-semibold text-primary-foreground shadow-sm transition-all hover:scale-[1.02] disabled:opacity-50"
+            >
+              {signingIn ? "Signing in..." : "Sign in"}
+            </button>
+          </form>
         </div>
       </div>
     );
