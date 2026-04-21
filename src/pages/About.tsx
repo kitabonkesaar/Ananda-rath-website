@@ -3,7 +3,8 @@ import { WhyChooseSection, TestimonialsSection, Footer } from "@/components/Home
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SEO from "@/components/SEO";
 import { Users, Award, Globe, Heart } from "lucide-react";
-import heroImg from "@/assets/hero-kedarnath.jpg";
+import _heroImg from "@/assets/hero-kedarnath.jpg";
+const heroImg = typeof _heroImg === "string" ? _heroImg : (_heroImg as any).src;
 
 const AboutHero = () => (
   <section className="page-header rounded-none -mt-0">
