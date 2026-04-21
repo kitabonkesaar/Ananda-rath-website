@@ -256,7 +256,7 @@ export const FeaturedPackagesSection = () => {
                   )}
                   {pkg.is_full ? (
                     <div className="absolute top-3 right-3 rounded-full bg-destructive px-3 py-1 text-xs font-bold text-destructive-foreground shadow-lg animate-pulse">
-                      SOLD OUT
+                      Fully Booked
                     </div>
                   ) : pkg.seats_left !== null && pkg.seats_left > 0 && pkg.seats_left <= 15 && (
                     <div className="absolute top-3 right-3 rounded-full bg-primary px-3 py-1 text-xs font-bold text-white shadow-lg">
@@ -269,20 +269,27 @@ export const FeaturedPackagesSection = () => {
                     </div>
                   )}
                 </div>
-                <div className="p-5">
-                  <h3 className="mb-1 text-xl font-bold text-foreground group-hover:text-primary transition-colors">{pkg.title}</h3>
+                <div className="flex flex-col flex-1 p-5">
+                  <h3 className="mb-1 text-xl font-bold text-foreground group-hover:text-primary transition-colors leading-snug">{pkg.title}</h3>
                   {pkg.subtitle && <p className="mb-3 text-sm text-muted-foreground line-clamp-1">{pkg.subtitle}</p>}
-                  <div className="mb-4 flex flex-wrap gap-3 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1"><Clock className="h-4 w-4" />{pkg.duration}</span>
-                    <span className="flex items-center gap-1"><MapPin className="h-4 w-4" />{pkg.starting_from}</span>
+                  <div className="mb-4 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1 bg-secondary rounded-full px-3 py-1 text-foreground/80"><Clock className="h-3.5 w-3.5" />{pkg.duration}</span>
+                    <span className="flex items-center gap-1 bg-secondary rounded-full px-3 py-1 text-foreground/80"><MapPin className="h-3.5 w-3.5" />{pkg.starting_from}</span>
+                    {pkg.trip_date && (
+                      <span className="flex items-center gap-1 bg-secondary rounded-full px-3 py-1 text-foreground/80"><CalendarDays className="h-3.5 w-3.5" />{pkg.trip_date}</span>
+                    )}
                   </div>
-                  <div className="flex items-end justify-between border-t border-border pt-4">
-                    <div>
-                      <span className="text-2xl font-extrabold text-primary">{pkg.price}</span>
-                      <span className="text-sm text-muted-foreground"> / {pkg.price_note}</span>
-                    </div>
+                  <div className="mt-auto pt-4 flex items-end justify-between border-t border-border">
+                    {pkg.is_full ? (
+                      <span className="text-sm font-bold text-destructive">Fully Booked</span>
+                    ) : (
+                      <div>
+                        <span className="text-2xl font-extrabold text-primary">{pkg.price}</span>
+                        <span className="text-sm text-muted-foreground"> / {pkg.price_note}</span>
+                      </div>
+                    )}
                     <span className="text-sm font-semibold text-primary flex items-center gap-1 group-hover:gap-2 transition-all">
-                      Details <ArrowRight className="h-4 w-4" />
+                      View Details <ArrowRight className="h-4 w-4" />
                     </span>
                   </div>
                 </div>
@@ -436,7 +443,7 @@ export const PackagesSection = () => {
                   <div className="absolute top-3 right-3 flex flex-col items-end gap-2">
                     {pkg.is_full ? (
                       <span className="rounded-full bg-destructive/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-white shadow-lg animate-pulse">
-                        SOLD OUT
+                        Fully Booked
                       </span>
                     ) : pkg.seats_left !== null && pkg.seats_left !== undefined && pkg.seats_left > 0 && pkg.seats_left <= 15 ? (
                       <span className="rounded-full bg-primary/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-white shadow-lg">
@@ -445,19 +452,13 @@ export const PackagesSection = () => {
                     ) : null}
                   </div>
 
-                  {/* Bottom info row */}
-                  <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 flex items-end justify-between">
-                    {pkg.next_departure ? (
-                      <div className="flex items-center gap-1.5 rounded-full bg-black/50 backdrop-blur-sm px-3 py-1.5">
-                        <CalendarDays className="h-3.5 w-3.5 text-white/70" />
-                        <span className="text-xs font-medium text-white">{pkg.next_departure}</span>
-                      </div>
-                    ) : <span />}
-                    <div className="text-right">
-                      <p className="text-xl font-extrabold text-white drop-shadow">{pkg.price}</p>
-                      {pkg.price_note && <p className="text-[10px] text-white/60">/ {pkg.price_note}</p>}
+                  {/* Bottom info row (Image overlay) */}
+                  {pkg.next_departure && (
+                    <div className="absolute bottom-3 left-3 rounded-full bg-black/60 backdrop-blur-sm px-3 py-1 text-xs font-medium text-white shadow-sm flex items-center gap-1.5">
+                      <CalendarDays className="h-3.5 w-3.5 text-white/70" />
+                      Next: {pkg.next_departure}
                     </div>
-                  </div>
+                  )}
                 </div>
 
                 {/* Body */}
@@ -470,13 +471,18 @@ export const PackagesSection = () => {
                   )}
 
                   {/* Duration & Location */}
-                  <div className="mt-3 flex flex-wrap gap-3 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1.5 bg-secondary rounded-full px-3 py-1">
+                  <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1.5 bg-secondary text-foreground/80 rounded-full px-3 py-1">
                       <Clock className="h-3.5 w-3.5" />{pkg.duration}
                     </span>
-                    <span className="flex items-center gap-1.5 bg-secondary rounded-full px-3 py-1">
+                    <span className="flex items-center gap-1.5 bg-secondary text-foreground/80 rounded-full px-3 py-1">
                       <MapPin className="h-3.5 w-3.5" />{pkg.starting_from}
                     </span>
+                    {pkg.trip_date && (
+                      <span className="flex items-center gap-1.5 bg-secondary text-foreground/80 rounded-full px-3 py-1">
+                        <CalendarDays className="h-3.5 w-3.5" />{pkg.trip_date}
+                      </span>
+                    )}
                   </div>
 
                   {/* Highlights */}
@@ -495,17 +501,16 @@ export const PackagesSection = () => {
                     </div>
                   )}
 
-                  {/* CTA row */}
-                  <div className="mt-auto pt-4 border-t border-border flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">
-                      {pkg.is_full ? (
-                        <span className="font-semibold text-destructive">Fully Booked</span>
-                      ) : pkg.seats_left !== null && pkg.seats_left !== undefined && pkg.seats_left > 0 ? (
-                        <span className="font-medium text-amber-600">{pkg.seats_left} seats left</span>
-                      ) : (
-                        "Available"
-                      )}
-                    </span>
+                  {/* CTA row (Price & Details) */}
+                  <div className="mt-auto pt-4 border-t border-border flex items-end justify-between">
+                    {pkg.is_full ? (
+                      <span className="text-sm font-bold text-destructive">Fully Booked</span>
+                    ) : (
+                      <div>
+                        <span className="text-2xl font-extrabold text-primary">{pkg.price}</span>
+                        {pkg.price_note && <span className="text-sm text-muted-foreground"> / {pkg.price_note}</span>}
+                      </div>
+                    )}
                     <span className="text-sm font-semibold text-primary flex items-center gap-1 group-hover:gap-2 transition-all">
                       View Details <ArrowRight className="h-4 w-4" />
                     </span>
