@@ -32,16 +32,16 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
   }
 }
 
-const Index = React.lazy(() => import("./pages/Index"));
-const Packages = React.lazy(() => import("./pages/Packages"));
-const Gallery = React.lazy(() => import("./pages/Gallery"));
-const About = React.lazy(() => import("./pages/About"));
-const Contact = React.lazy(() => import("./pages/Contact"));
-const PackagePage = React.lazy(() => import("./pages/PackagePage"));
-const AdminPage = React.lazy(() => import("./pages/AdminPage"));
-const VideoTestimonials = React.lazy(() => import("./pages/VideoTestimonials"));
-const BlogPage = React.lazy(() => import("./pages/BlogPage"));
-const NotFound = React.lazy(() => import("./pages/NotFound"));
+const Index = React.lazy(() => import("./legacy-pages/Index"));
+const Packages = React.lazy(() => import("./legacy-pages/Packages"));
+const Gallery = React.lazy(() => import("./legacy-pages/Gallery"));
+const About = React.lazy(() => import("./legacy-pages/About"));
+const Contact = React.lazy(() => import("./legacy-pages/Contact"));
+const PackagePage = React.lazy(() => import("./legacy-pages/PackagePage"));
+const AdminPage = React.lazy(() => import("./legacy-pages/AdminPage"));
+const VideoTestimonials = React.lazy(() => import("./legacy-pages/VideoTestimonials"));
+const BlogPage = React.lazy(() => import("./legacy-pages/BlogPage"));
+const NotFound = React.lazy(() => import("./legacy-pages/NotFound"));
 
 const queryClient = new QueryClient();
 
