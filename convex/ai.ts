@@ -25,7 +25,8 @@ export const generateText = action({
         messages: [{ role: "user", content: args.prompt }],
       });
 
-      return response.content[0].text;
+      const block = response.content[0];
+      return block.type === "text" ? block.text : "";
     } catch (error) {
       console.error("Error calling Claude API:", error);
       throw new Error("Failed to generate response from Claude");

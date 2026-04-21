@@ -67,7 +67,7 @@ const AdminInquiries = () => {
       ) : (
         <div className="space-y-3">
           {filtered.map((inq) => (
-            <div key={inq.id} className="rounded-xl bg-card p-4 shadow-card">
+            <div key={inq._id} className="rounded-xl bg-card p-4 shadow-card">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <h3 className="font-semibold text-foreground">{inq.name}</h3>

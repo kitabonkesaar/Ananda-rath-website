@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { 
@@ -15,9 +17,13 @@ import AdminVideoTestimonials from "@/components/admin/AdminVideoTestimonials";
 import AdminHeroConfig from "@/components/admin/AdminHeroConfig";
 import AdminBlog from "@/components/admin/AdminBlog";
 
-// Demo credentials — not exposed in UI
-const DEMO_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || "admin@anandarath.com";
-const DEMO_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "admin123";
+// Demo credentials — use NEXT_PUBLIC_ADMIN_EMAIL / NEXT_PUBLIC_ADMIN_PASSWORD in .env.local
+const DEMO_EMAIL =
+  (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_ADMIN_EMAIL) ||
+  "admin@anandarath.com";
+const DEMO_PASSWORD =
+  (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_ADMIN_PASSWORD) ||
+  "admin123";
 
 const navGroups = [
   {

@@ -1,5 +1,10 @@
-import { Link, useLocation } from "react-router-dom";
-import logo from "@/assets/logo.png";
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+// Next.js returns a StaticImageData object for static imports; .src gets the URL
+import _logo from "@/assets/logo.png";
+const logo = typeof _logo === "string" ? _logo : (_logo as any).src;
 import WhatsAppButton from "./WhatsAppButton";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -17,7 +22,7 @@ const navLinks = [
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -28,7 +33,7 @@ const Navbar = () => {
   // Close mobile menu on route change
   useEffect(() => {
     setOpen(false);
-  }, [location.pathname]);
+  }, [pathname]);
 
   return (
     <nav
@@ -39,17 +44,21 @@ const Navbar = () => {
       }`}
     >
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center group" aria-label="AnandaRath Home">
-          <img src={logo} alt="AnandaRath - Spiritual Tourism" className="h-[52px] w-auto transition-transform group-hover:scale-[1.02]" />
+        <Link href="/" className="flex items-center group" aria-label="AnandaRath Home">
+          <img
+            src={logo}
+            alt="AnandaRath - Spiritual Tourism"
+            className="h-[52px] w-auto transition-transform group-hover:scale-[1.02]"
+          />
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.to}
-              to={link.to}
+              href={link.to}
               className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                location.pathname === link.to
+                pathname === link.to
                   ? "text-primary bg-primary/5"
                   : "text-foreground/60 hover:text-foreground hover:bg-muted"
               }`}
@@ -62,8 +71,8 @@ const Navbar = () => {
           </div>
         </div>
 
-        <button 
-          onClick={() => setOpen(!open)} 
+        <button
+          onClick={() => setOpen(!open)}
           className="md:hidden text-foreground p-2 rounded-lg hover:bg-muted transition-colors"
           aria-label={open ? "Close navigation menu" : "Open navigation menu"}
           aria-expanded={open}
@@ -86,9 +95,9 @@ const Navbar = () => {
           {navLinks.map((link) => (
             <Link
               key={link.to}
-              to={link.to}
+              href={link.to}
               className={`px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-                location.pathname === link.to
+                pathname === link.to
                   ? "text-primary bg-primary/5"
                   : "text-foreground/70 hover:bg-muted"
               }`}
@@ -97,7 +106,10 @@ const Navbar = () => {
             </Link>
           ))}
           <div className="mt-2">
-            <WhatsAppButton label="Enquire on WhatsApp" className="w-full justify-center" />
+            <WhatsAppButton
+              label="Enquire on WhatsApp"
+              className="w-full justify-center"
+            />
           </div>
         </div>
       </div>

@@ -1,10 +1,17 @@
+"use client";
+
 import { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Clock, MapPin, Star, Bus, Utensils, Shield, Heart, Image, Phone, Mail, MapPinned, ArrowRight, Sparkles, Send, Camera, X, Search, SlidersHorizontal, CalendarDays, Tag } from "lucide-react";
 import WhatsAppButton from "./WhatsAppButton";
-import heroImg from "@/assets/hero-kedarnath.jpg";
-import logo from "@/assets/logo.png";
-import jagannathIcon from "@/assets/jagannath-icon.png";
+import _heroImg from "@/assets/hero-kedarnath.jpg";
+import _logo from "@/assets/logo.png";
+import _jagannathIcon from "@/assets/jagannath-icon.png";
+
+// Next.js static imports return StaticImageData; extract the URL string
+const heroImg = typeof _heroImg === "string" ? _heroImg : (_heroImg as any).src;
+const logo = typeof _logo === "string" ? _logo : (_logo as any).src;
+const jagannathIcon = typeof _jagannathIcon === "string" ? _jagannathIcon : (_jagannathIcon as any).src;
 import { usePackages, useTestimonials, useGalleryPhotos, useSubmitInquiry, useHeroConfig } from "@/hooks/useConvex";
 import { WHATSAPP_NUMBER } from "@/data/config";
 

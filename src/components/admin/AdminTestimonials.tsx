@@ -82,7 +82,7 @@ const AdminTestimonials = () => {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {testimonials?.map((t) => (
-          <div key={t.id} className="rounded-xl bg-card p-4 shadow-card">
+          <div key={t._id} className="rounded-xl bg-card p-4 shadow-card">
             <div className="flex items-center gap-3 mb-2">
               {t.photo_url && <img src={t.photo_url} alt="" className="h-10 w-10 rounded-full object-cover" />}
               <div>

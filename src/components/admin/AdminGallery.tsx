@@ -67,7 +67,7 @@ const AdminGallery = () => {
               <input placeholder="Caption (optional)" value={caption} onChange={(e) => setCaption(e.target.value)} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
               <select value={packageId} onChange={(e) => setPackageId(e.target.value)} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
                 <option value="">No package (general)</option>
-                {packages?.map((p) => <option key={p.id} value={p.id}>{p.title}</option>)}
+                {packages?.map((p) => <option key={p._id} value={p._id}>{p.title}</option>)}
               </select>
               <input type="file" ref={fileRef} accept="image/*" multiple onChange={handleUpload} className="hidden" />
               <button
@@ -85,11 +85,11 @@ const AdminGallery = () => {
       {/* Gallery grid */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {photos?.map((photo) => (
-          <div key={photo.id} className="group relative overflow-hidden rounded-xl">
+          <div key={photo._id} className="group relative overflow-hidden rounded-xl">
             <img src={photo.image_url} alt={photo.caption || ""} className="h-48 w-full object-cover" loading="lazy" onError={(e) => { e.currentTarget.src = "https://placehold.co/600x400/f1f5f9/94a3b8?text=Image+Not+Found"; }} />
             <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/40 transition-colors flex items-center justify-center">
               <button
-                onClick={() => handleDelete(photo.id)}
+                onClick={() => handleDelete(photo._id)}
                 className="opacity-0 group-hover:opacity-100 rounded-full bg-destructive p-2 text-destructive-foreground transition-opacity"
               >
                 <Trash2 className="h-4 w-4" />
