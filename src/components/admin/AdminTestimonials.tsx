@@ -27,7 +27,7 @@ const AdminTestimonials = () => {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const openEdit = (t?: any) => {
-    setEditing(t ? { id: t.id, name: t.name, location: t.location || "", text: t.text, rating: t.rating || 5, photo_url: t.photo_url || "", is_visible: t.is_visible, display_order: t.display_order || 0 } : { ...empty });
+    setEditing(t ? { id: t._id, name: t.name, location: t.location || "", text: t.text, rating: t.rating || 5, photo_url: t.photo_url || "", is_visible: true, display_order: t.display_order || 0 } : { ...empty });
   };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

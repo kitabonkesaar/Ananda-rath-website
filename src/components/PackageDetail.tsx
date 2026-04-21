@@ -221,7 +221,7 @@ const PackageDetail = () => {
               />
               <CallButton className="w-full justify-center" />
             </div>
-            <InquiryForm packageName={pkg.title} packageId={pkg.id} />
+            <InquiryForm packageName={pkg.title} packageId={pkg._id} />
           </div>
         </div>
       </div>

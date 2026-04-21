@@ -424,7 +424,7 @@ export const PackagesSection = () => {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((pkg) => (
               <Link
-                to={`/package/${pkg.slug}`}
+                href={`/package/${pkg.slug}`}
                 key={pkg._id}
                 className="group flex flex-col overflow-hidden rounded-2xl bg-card border border-border/40 shadow-card card-interactive"
               >
@@ -576,7 +576,7 @@ export const GallerySection = () => {
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {photos.map((photo) => (
               <div 
-                key={photo.id} 
+                key={photo._id} 
                 className="group relative overflow-hidden rounded-xl card-interactive cursor-zoom-in"
                 onClick={() => setSelectedPhoto(photo.image_url)}
               >
@@ -678,7 +678,7 @@ export const TestimonialsSection = () => {
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((t) => (
-            <div key={t.id} className="rounded-2xl bg-card p-6 shadow-card card-interactive">
+            <div key={t._id} className="rounded-2xl bg-card p-6 shadow-card card-interactive">
               <div className="mb-4 flex gap-1">
                 {Array.from({ length: t.rating || 5 }).map((_, i) => (
                   <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
