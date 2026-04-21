@@ -1,7 +1,7 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { usePackageBySlug } from "@/hooks/useConvex";
 import WhatsAppButton, { CallButton } from "@/components/WhatsAppButton";
 import { Clock, MapPin, Check, X, ArrowLeft, Users, Image } from "lucide-react";

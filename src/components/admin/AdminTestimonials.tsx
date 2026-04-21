@@ -94,9 +94,9 @@ const AdminTestimonials = () => {
             <p className="text-xs text-muted-foreground line-clamp-3">"{t.text}"</p>
             <div className="flex gap-2 mt-3">
               <button onClick={() => openEdit(t)} className="rounded bg-muted p-1.5 text-muted-foreground hover:text-foreground"><Edit2 className="h-3 w-3" /></button>
-              <button onClick={() => handleDelete(t.id)} className="rounded bg-destructive/10 p-1.5 text-destructive"><Trash2 className="h-3 w-3" /></button>
-              <span className={`ml-auto rounded-full px-2 py-0.5 text-xs ${t.is_visible ? "bg-green-100 text-green-800" : "bg-muted text-muted-foreground"}`}>
-                {t.is_visible ? "Visible" : "Hidden"}
+              <button onClick={() => handleDelete(t._id)} className="rounded bg-destructive/10 p-1.5 text-destructive"><Trash2 className="h-3 w-3" /></button>
+              <span className="ml-auto rounded-full px-2 py-0.5 text-xs bg-green-100 text-green-800">
+                Visible
               </span>
             </div>
           </div>

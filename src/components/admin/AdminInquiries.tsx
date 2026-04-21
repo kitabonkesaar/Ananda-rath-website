@@ -83,7 +83,7 @@ const AdminInquiries = () => {
                 <div className="flex items-center gap-2">
                   <select
                     value={inq.status}
-                    onChange={(e) => updateStatus.mutate({ id: inq.id, status: e.target.value })}
+                    onChange={(e) => updateStatus.mutate({ id: inq._id, status: e.target.value })}
                     className={`rounded-full px-3 py-1 text-xs font-medium border-0 ${statusColors[inq.status]}`}
                   >
                     <option value="new">New</option>
