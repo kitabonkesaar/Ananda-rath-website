@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx convex *)"
+      "Bash(npx convex *)",
+      "Bash(dir \"E:\\\\myaiapps\\\\Ananda Rath Website\\\\spirit-lead-gen\\\\node_modules\\\\next\" /b)",
+      "Bash(npm install *)"
     ]
   }
 }

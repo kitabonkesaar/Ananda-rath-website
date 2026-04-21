@@ -96,7 +96,7 @@ export const HeroSection = () => {
   return (
     <section className="relative min-h-[92vh] flex items-center overflow-hidden">
       <div className="absolute inset-0">
-        <img src={heroImg} alt="Sacred Kedarnath Temple in the Himalayas" className="h-full w-full object-cover" width={1920} height={1080} fetchpriority="high" loading="eager" />
+        <img src={heroImg} alt="Sacred Kedarnath Temple in the Himalayas" className="h-full w-full object-cover" width={1920} height={1080} fetchPriority="high" loading="eager" />
         <div className="absolute inset-0 gradient-hero-overlay" />
       </div>
       <div className="container relative z-10 pt-16 pb-28 md:pb-32">
@@ -116,7 +116,7 @@ export const HeroSection = () => {
             </p>
             <div className="flex flex-wrap gap-4">
               <WhatsAppButton variant="hero" label="Enquire on WhatsApp" />
-              <Link to="/packages" className="inline-flex items-center gap-2 rounded-full border-2 border-white/25 px-8 py-4 text-lg font-semibold text-white transition-all hover:border-white/50 hover:bg-white/10 backdrop-blur-sm">
+              <Link href="/packages" className="inline-flex items-center gap-2 rounded-full border-2 border-white/25 px-8 py-4 text-lg font-semibold text-white transition-all hover:border-white/50 hover:bg-white/10 backdrop-blur-sm">
                 View Packages
                 <ArrowRight className="h-5 w-5" />
               </Link>
@@ -254,7 +254,7 @@ export const FeaturedPackagesSection = () => {
         ) : (
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {packages.slice(0, 3).map((pkg) => (
-              <Link to={`/package/${pkg.slug}`} key={pkg.id} className="group overflow-hidden rounded-2xl bg-card shadow-card card-interactive">
+              <Link href={`/package/${pkg.slug}`} key={pkg._id} className="group overflow-hidden rounded-2xl bg-card shadow-card card-interactive">
                 <div className="relative overflow-hidden">
                   {pkg.image_url ? (
                     <img src={pkg.image_url} alt={pkg.title} className="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" onError={(e) => { e.currentTarget.src = "https://placehold.co/600x400/f1f5f9/94a3b8?text=Image+Not+Found"; }} />
@@ -306,7 +306,7 @@ export const FeaturedPackagesSection = () => {
         )}
         {packages && packages.length > 3 && (
           <div className="text-center mt-12">
-            <Link to="/packages" className="inline-flex items-center gap-2 rounded-full border-2 border-primary px-8 py-3 text-sm font-semibold text-primary transition-all hover:bg-primary hover:text-white">
+            <Link href="/packages" className="inline-flex items-center gap-2 rounded-full border-2 border-primary px-8 py-3 text-sm font-semibold text-primary transition-all hover:bg-primary hover:text-white">
               View All Packages <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -425,7 +425,7 @@ export const PackagesSection = () => {
             {filtered.map((pkg) => (
               <Link
                 to={`/package/${pkg.slug}`}
-                key={pkg.id}
+                key={pkg._id}
                 className="group flex flex-col overflow-hidden rounded-2xl bg-card border border-border/40 shadow-card card-interactive"
               >
                 {/* Image */}
@@ -759,7 +759,7 @@ export const Footer = () => (
               { to: "/contact", label: "Contact" },
             ].map((link) => (
               <li key={link.to}>
-                <Link to={link.to} className="text-sm text-white/50 hover:text-white transition-colors">
+                <Link href={link.to} className="text-sm text-white/50 hover:text-white transition-colors">
                   {link.label}
                 </Link>
               </li>
