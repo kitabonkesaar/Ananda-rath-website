@@ -1,15 +1,5 @@
 {
   "/_error": "pages/_error.js",
-  "/AdminPage": "pages/AdminPage.js",
-  "/About": "pages/About.js",
   "/_app": "pages/_app.js",
-  "/BlogPage": "pages/BlogPage.js",
-  "/Contact": "pages/Contact.js",
-  "/Gallery": "pages/Gallery.js",
-  "/Index": "pages/Index.js",
-  "/NotFound": "pages/NotFound.js",
-  "/Packages": "pages/Packages.js",
-  "/PackagePage": "pages/PackagePage.js",
-  "/VideoTestimonials": "pages/VideoTestimonials.js",
   "/_document": "pages/_document.js"
 }
