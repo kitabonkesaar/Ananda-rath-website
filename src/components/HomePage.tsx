@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Clock, MapPin, Star, Bus, Utensils, Shield, Heart, Image, Phone, Mail, MapPinned, ArrowRight, Sparkles, Send, Camera, X } from "lucide-react";
+import { Clock, MapPin, Star, Bus, Utensils, Shield, Heart, Image, Phone, Mail, MapPinned, ArrowRight, Sparkles, Send, Camera, X, Search, SlidersHorizontal, CalendarDays, Tag } from "lucide-react";
 import WhatsAppButton from "./WhatsAppButton";
 import heroImg from "@/assets/hero-kedarnath.jpg";
 import logo from "@/assets/logo.png";
@@ -305,75 +305,209 @@ export const FeaturedPackagesSection = () => {
 // ── Full Packages Section (for packages page) ──
 export const PackagesSection = () => {
   const { data: packages, isLoading } = usePackages();
+  const [search, setSearch] = useState("");
+
+  const filtered = useMemo(() => {
+    if (!packages) return [];
+    if (!search.trim()) return packages;
+    const q = search.toLowerCase();
+    return packages.filter(
+      (p) =>
+        p.title.toLowerCase().includes(q) ||
+        (p.subtitle && p.subtitle.toLowerCase().includes(q)) ||
+        (p.highlights && p.highlights.some((h) => h.toLowerCase().includes(q)))
+    );
+  }, [packages, search]);
 
   return (
-    <section className="py-24">
+    <section className="py-20">
       <div className="container">
-        <div className="page-header rounded-3xl mb-16 -mt-10">
+        {/* ── Page Header ── */}
+        <div className="page-header rounded-3xl mb-12 -mt-10 text-center">
           <div className="relative z-10">
             <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-white/60">🕉️ Our Yatras</p>
             <h1 className="text-3xl font-bold text-white md:text-5xl">All Pilgrimage Packages</h1>
-            <p className="mt-4 text-white/60 max-w-lg mx-auto">Choose your spiritual journey. Each yatra is designed for comfort, devotion, and unforgettable experiences.</p>
+            <p className="mt-4 text-white/60 max-w-lg mx-auto">
+              Choose your spiritual journey. Each yatra is crafted for comfort, devotion, and unforgettable experiences.
+            </p>
+            {packages && packages.length > 0 && (
+              <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-5 py-2">
+                <Tag className="h-4 w-4 text-white/70" />
+                <span className="text-sm font-medium text-white/80">{packages.length} packages available</span>
+              </div>
+            )}
           </div>
         </div>
+
+        {/* ── Search Bar ── */}
+        {!isLoading && packages && packages.length > 0 && (
+          <div className="mb-10 flex flex-col sm:flex-row gap-3 items-center justify-between">
+            <div className="relative w-full sm:max-w-sm">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Search destinations, highlights…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full rounded-full border border-border bg-card pl-11 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all shadow-sm"
+              />
+              {search && (
+                <button
+                  onClick={() => setSearch("")}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Clear search"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground shrink-0">
+              {search ? (
+                <span><span className="font-semibold text-foreground">{filtered.length}</span> result{filtered.length !== 1 ? "s" : ""} for "{search}"</span>
+              ) : (
+                <span><span className="font-semibold text-foreground">{packages.length}</span> packages</span>
+              )}
+            </p>
+          </div>
+        )}
+
+        {/* ── Cards ── */}
         {isLoading ? (
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="rounded-2xl overflow-hidden">
-                <div className="skeleton h-56 w-full" />
+              <div key={i} className="rounded-2xl overflow-hidden border border-border/50">
+                <div className="skeleton h-60 w-full" />
                 <div className="p-5 space-y-3 bg-card">
                   <div className="skeleton h-6 w-3/4" />
                   <div className="skeleton h-4 w-1/2" />
+                  <div className="flex gap-2">
+                    <div className="skeleton h-6 w-20 rounded-full" />
+                    <div className="skeleton h-6 w-24 rounded-full" />
+                  </div>
                   <div className="skeleton h-4 w-full" />
                 </div>
               </div>
             ))}
           </div>
         ) : !packages?.length ? (
-          <div className="text-center py-16">
-            <Sparkles className="mx-auto h-12 w-12 text-muted-foreground/40 mb-4" />
-            <p className="text-muted-foreground text-lg">Packages coming soon.</p>
+          <div className="text-center py-20">
+            <div className="mx-auto mb-6 h-20 w-20 rounded-full bg-muted flex items-center justify-center">
+              <Sparkles className="h-9 w-9 text-muted-foreground/40" />
+            </div>
+            <p className="text-muted-foreground text-lg font-medium">Packages coming soon.</p>
             <p className="text-muted-foreground text-sm mt-1">Contact us on WhatsApp for details!</p>
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="text-center py-20">
+            <div className="mx-auto mb-6 h-20 w-20 rounded-full bg-muted flex items-center justify-center">
+              <Search className="h-9 w-9 text-muted-foreground/40" />
+            </div>
+            <p className="text-foreground text-lg font-semibold">No packages found</p>
+            <p className="text-muted-foreground text-sm mt-1">Try a different keyword.</p>
+            <button onClick={() => setSearch("")} className="mt-4 text-sm text-primary underline-offset-2 hover:underline">Clear search</button>
           </div>
         ) : (
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {packages.map((pkg) => (
-              <Link to={`/package/${pkg.slug}`} key={pkg.id} className="group overflow-hidden rounded-2xl bg-card shadow-card card-interactive">
+            {filtered.map((pkg) => (
+              <Link
+                to={`/package/${pkg.slug}`}
+                key={pkg.id}
+                className="group flex flex-col overflow-hidden rounded-2xl bg-card border border-border/40 shadow-card card-interactive"
+              >
+                {/* Image */}
                 <div className="relative overflow-hidden">
                   {pkg.image_url ? (
-                    <img src={pkg.image_url} alt={pkg.title} className="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" onError={(e) => { e.currentTarget.src = "https://placehold.co/600x400/f1f5f9/94a3b8?text=Image+Not+Found"; }} />
+                    <img
+                      src={pkg.image_url}
+                      alt={pkg.title}
+                      className="h-60 w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      loading="lazy"
+                      onError={(e) => { e.currentTarget.src = "https://placehold.co/600x400/f1f5f9/94a3b8?text=Image+Not+Found"; }}
+                    />
                   ) : (
-                    <div className="h-56 w-full bg-muted flex items-center justify-center"><Image className="h-12 w-12 text-muted-foreground/40" /></div>
-                  )}
-                  {pkg.is_full ? (
-                    <div className="absolute top-3 right-3 rounded-full bg-destructive px-3 py-1 text-xs font-bold text-destructive-foreground shadow-lg animate-pulse">
-                      SOLD OUT
-                    </div>
-                  ) : pkg.seats_left !== null && pkg.seats_left > 0 && pkg.seats_left <= 15 && (
-                    <div className="absolute top-3 right-3 rounded-full bg-primary px-3 py-1 text-xs font-bold text-white shadow-lg">
-                      {pkg.seats_left} seats left
+                    <div className="h-60 w-full bg-muted flex items-center justify-center">
+                      <Image className="h-14 w-14 text-muted-foreground/30" />
                     </div>
                   )}
-                  {pkg.next_departure && (
-                    <div className="absolute bottom-3 left-3 rounded-full bg-black/60 backdrop-blur-sm px-3 py-1 text-xs font-medium text-white">
-                      Next: {pkg.next_departure}
-                    </div>
-                  )}
-                </div>
-                <div className="p-5">
-                  <h3 className="mb-1 text-xl font-bold text-foreground group-hover:text-primary transition-colors">{pkg.title}</h3>
-                  {pkg.subtitle && <p className="mb-3 text-sm text-muted-foreground line-clamp-1">{pkg.subtitle}</p>}
-                  <div className="mb-4 flex flex-wrap gap-3 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1"><Clock className="h-4 w-4" />{pkg.duration}</span>
-                    <span className="flex items-center gap-1"><MapPin className="h-4 w-4" />{pkg.starting_from}</span>
+                  {/* Gradient overlay for bottom info */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+
+                  {/* Top badges */}
+                  <div className="absolute top-3 right-3 flex flex-col items-end gap-2">
+                    {pkg.is_full ? (
+                      <span className="rounded-full bg-destructive/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-white shadow-lg animate-pulse">
+                        SOLD OUT
+                      </span>
+                    ) : pkg.seats_left !== null && pkg.seats_left !== undefined && pkg.seats_left > 0 && pkg.seats_left <= 15 ? (
+                      <span className="rounded-full bg-primary/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-white shadow-lg">
+                        ⚡ {pkg.seats_left} seats left
+                      </span>
+                    ) : null}
                   </div>
-                  <div className="flex items-end justify-between border-t border-border pt-4">
-                    <div>
-                      <span className="text-2xl font-extrabold text-primary">{pkg.price}</span>
-                      <span className="text-sm text-muted-foreground"> / {pkg.price_note}</span>
+
+                  {/* Bottom info row */}
+                  <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 flex items-end justify-between">
+                    {pkg.next_departure ? (
+                      <div className="flex items-center gap-1.5 rounded-full bg-black/50 backdrop-blur-sm px-3 py-1.5">
+                        <CalendarDays className="h-3.5 w-3.5 text-white/70" />
+                        <span className="text-xs font-medium text-white">{pkg.next_departure}</span>
+                      </div>
+                    ) : <span />}
+                    <div className="text-right">
+                      <p className="text-xl font-extrabold text-white drop-shadow">{pkg.price}</p>
+                      {pkg.price_note && <p className="text-[10px] text-white/60">/ {pkg.price_note}</p>}
                     </div>
+                  </div>
+                </div>
+
+                {/* Body */}
+                <div className="flex flex-col flex-1 p-5">
+                  <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors leading-snug">
+                    {pkg.title}
+                  </h3>
+                  {pkg.subtitle && (
+                    <p className="mt-1 text-sm text-muted-foreground line-clamp-1">{pkg.subtitle}</p>
+                  )}
+
+                  {/* Duration & Location */}
+                  <div className="mt-3 flex flex-wrap gap-3 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1.5 bg-secondary rounded-full px-3 py-1">
+                      <Clock className="h-3.5 w-3.5" />{pkg.duration}
+                    </span>
+                    <span className="flex items-center gap-1.5 bg-secondary rounded-full px-3 py-1">
+                      <MapPin className="h-3.5 w-3.5" />{pkg.starting_from}
+                    </span>
+                  </div>
+
+                  {/* Highlights */}
+                  {pkg.highlights && pkg.highlights.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {pkg.highlights.slice(0, 3).map((h) => (
+                        <span key={h} className="rounded-full border border-primary/20 bg-primary/5 px-2.5 py-0.5 text-[11px] font-medium text-primary">
+                          {h}
+                        </span>
+                      ))}
+                      {pkg.highlights.length > 3 && (
+                        <span className="rounded-full border border-border px-2.5 py-0.5 text-[11px] text-muted-foreground">
+                          +{pkg.highlights.length - 3} more
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* CTA row */}
+                  <div className="mt-auto pt-4 border-t border-border flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">
+                      {pkg.is_full ? (
+                        <span className="font-semibold text-destructive">Fully Booked</span>
+                      ) : pkg.seats_left !== null && pkg.seats_left !== undefined && pkg.seats_left > 0 ? (
+                        <span className="font-medium text-amber-600">{pkg.seats_left} seats left</span>
+                      ) : (
+                        "Available"
+                      )}
+                    </span>
                     <span className="text-sm font-semibold text-primary flex items-center gap-1 group-hover:gap-2 transition-all">
-                      Details <ArrowRight className="h-4 w-4" />
+                      View Details <ArrowRight className="h-4 w-4" />
                     </span>
                   </div>
                 </div>
