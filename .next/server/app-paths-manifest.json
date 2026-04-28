@@ -2,12 +2,12 @@
   "/_not-found/page": "app/_not-found/page.js",
   "/admin/page": "app/admin/page.js",
   "/about/page": "app/about/page.js",
-  "/blog/page": "app/blog/page.js",
-  "/contact/page": "app/contact/page.js",
   "/blog/[slug]/page": "app/blog/[slug]/page.js",
+  "/contact/page": "app/contact/page.js",
+  "/blog/page": "app/blog/page.js",
   "/gallery/page": "app/gallery/page.js",
-  "/page": "app/page.js",
   "/package/[slug]/page": "app/package/[slug]/page.js",
   "/packages/page": "app/packages/page.js",
+  "/page": "app/page.js",
   "/video-testimonials/page": "app/video-testimonials/page.js"
 }
