@@ -5,11 +5,12 @@ import {
   useDeleteVideoTestimonial,
 } from "@/hooks/useConvex";
 import { getYoutubeThumbnail } from "@/data/videoTestimonials";
-import { Plus, Trash2, Edit2, Save, X, ExternalLink, Youtube, Loader2 } from "lucide-react";
+import { Plus, Trash2, Edit2, Save, X, ExternalLink, Youtube, Loader2, Instagram } from "lucide-react";
 import { toast } from "sonner";
 
 const emptyForm = {
   youtube_url: "",
+  instagram_reel_url: "",
   customer_name: "",
   location: "",
   title: "",
@@ -28,12 +29,18 @@ const AdminVideoTestimonials = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.youtube_url.trim() || !form.customer_name.trim()) return;
+    if (!form.youtube_url.trim() && !form.instagram_reel_url.trim()) {
+      toast.error("Please provide at least one link (YouTube or Instagram Reel)");
+      return;
+    }
+    if (!form.customer_name.trim()) return;
     setSaving(true);
     try {
       await upsert({
         id: editId || undefined,
         ...form,
+        youtube_url: form.youtube_url.trim() || undefined,
+        instagram_reel_url: form.instagram_reel_url.trim() || undefined,
         display_order: form.display_order || (videos?.length ?? 0) + 1,
       });
       toast.success(editId ? "Video updated!" : "Video added!");
@@ -49,7 +56,8 @@ const AdminVideoTestimonials = () => {
 
   const handleEdit = (video: any) => {
     setForm({
-      youtube_url: video.youtube_url,
+      youtube_url: video.youtube_url || "",
+      instagram_reel_url: video.instagram_reel_url || "",
       customer_name: video.customer_name,
       location: video.location || "",
       title: video.title || "",
@@ -80,7 +88,7 @@ const AdminVideoTestimonials = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-foreground">Video Testimonials</h2>
-          <p className="text-sm text-muted-foreground">Add YouTube links of customer testimonials</p>
+          <p className="text-sm text-muted-foreground">Add YouTube & Instagram Reels links of customer testimonials</p>
         </div>
         <button
           onClick={() => { setShowForm(true); setEditId(null); setForm(emptyForm); }}
@@ -101,13 +109,17 @@ const AdminVideoTestimonials = () => {
             </button>
           </div>
 
+          <div className="bg-muted/50 p-4 rounded-lg border border-border text-sm text-muted-foreground mb-4">
+            Please provide at least one link. You can provide both if you have them!
+          </div>
+
+          {/* YouTube URL */}
           <div>
-            <label className="text-sm font-medium text-foreground">YouTube URL *</label>
+            <label className="text-sm font-medium text-foreground">YouTube URL <span className="text-xs text-muted-foreground font-normal">(optional)</span></label>
             <div className="relative mt-1">
               <Youtube className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
                 type="url"
-                required
                 placeholder="https://www.youtube.com/watch?v=..."
                 value={form.youtube_url}
                 onChange={(e) => setForm({ ...form, youtube_url: e.target.value })}
@@ -125,6 +137,27 @@ const AdminVideoTestimonials = () => {
               />
             </div>
           )}
+
+          {/* Instagram Reel URL */}
+          <div>
+            <label className="text-sm font-medium text-foreground">
+              Instagram Reel URL
+              <span className="ml-2 text-xs font-normal text-muted-foreground">(optional)</span>
+            </label>
+            <div className="relative mt-1">
+              <Instagram className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input
+                type="url"
+                placeholder="https://www.instagram.com/reel/..."
+                value={form.instagram_reel_url}
+                onChange={(e) => setForm({ ...form, instagram_reel_url: e.target.value })}
+                className="w-full rounded-lg border border-input bg-background pl-10 pr-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Paste the Instagram Reel link so customers can also watch the review on Instagram.
+            </p>
+          </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             <div>
@@ -203,15 +236,24 @@ const AdminVideoTestimonials = () => {
           {[...videos]
             .sort((a, b) => a.display_order - b.display_order)
             .map((video) => {
-              const thumb = getYoutubeThumbnail(video.youtube_url);
+              // Note: If they previously put an Instagram link in the youtube_url field, we handle it gracefully here
+              const isYoutubeActuallyInsta = video.youtube_url?.includes("instagram.com");
+              const hasActualYoutube = video.youtube_url && !isYoutubeActuallyInsta;
+              
+              const thumb = hasActualYoutube ? getYoutubeThumbnail(video.youtube_url) : null;
+              
               return (
-                <div key={video._id} className="flex items-center gap-4 rounded-xl bg-card p-4 shadow-card border border-border">
-                  <div className="shrink-0 w-28 h-20 rounded-lg overflow-hidden bg-muted">
+                <div key={video._id} className="flex flex-col sm:flex-row sm:items-center gap-4 rounded-xl bg-card p-4 shadow-card border border-border">
+                  <div className="shrink-0 w-full sm:w-28 h-40 sm:h-20 rounded-lg overflow-hidden bg-muted">
                     {thumb ? (
                       <img src={thumb} alt={video.title || video.customer_name} className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <Youtube className="h-6 w-6 text-muted-foreground/40" />
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-500/10 to-pink-500/10">
+                        {video.instagram_reel_url || isYoutubeActuallyInsta ? (
+                          <Instagram className="h-8 w-8 text-pink-500/50" />
+                        ) : (
+                          <Youtube className="h-8 w-8 text-muted-foreground/40" />
+                        )}
                       </div>
                     )}
                   </div>
@@ -219,13 +261,67 @@ const AdminVideoTestimonials = () => {
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-foreground text-sm truncate">{video.title || "Untitled"}</p>
                     <p className="text-xs text-muted-foreground">{video.customer_name}{video.location ? ` • ${video.location}` : ""}</p>
-                    <p className="text-xs text-muted-foreground mt-1 truncate">{video.youtube_url}</p>
+                    
+                    {/* Show raw URLs for admin clarity */}
+                    <div className="mt-2 space-y-1">
+                      {video.youtube_url && (
+                        <p className="text-[11px] text-muted-foreground truncate font-mono">
+                          {video.youtube_url}
+                        </p>
+                      )}
+                      {video.instagram_reel_url && (
+                        <p className="text-[11px] text-muted-foreground truncate font-mono">
+                          {video.instagram_reel_url}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Platform badges */}
+                    <div className="flex items-center gap-2 mt-2">
+                      {hasActualYoutube && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-red-500/10 px-2 py-0.5 text-[10px] font-semibold text-red-600 dark:text-red-400">
+                          <Youtube className="h-3 w-3" /> YouTube
+                        </span>
+                      )}
+                      {(video.instagram_reel_url || isYoutubeActuallyInsta) && (
+                        <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold text-transparent bg-clip-text"
+                          style={{
+                            background: "linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                          }}
+                        >
+                          <Instagram className="h-3 w-3" style={{ color: "#e6683c" }} /> Reel
+                        </span>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
-                    <a href={video.youtube_url} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground">
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
+                  <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto mt-2 sm:mt-0">
+                    {/* YouTube Link */}
+                    {video.youtube_url && (
+                      <a
+                        href={video.youtube_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Open Link"
+                        className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    )}
+                    {/* Instagram Reel Link */}
+                    {video.instagram_reel_url && (
+                      <a
+                        href={video.instagram_reel_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Open Instagram Reel"
+                        className="p-2 rounded-lg hover:bg-pink-500/10 text-muted-foreground hover:text-pink-500 transition-colors"
+                      >
+                        <Instagram className="h-4 w-4" />
+                      </a>
+                    )}
                     <button onClick={() => handleEdit(video)} className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground">
                       <Edit2 className="h-4 w-4" />
                     </button>

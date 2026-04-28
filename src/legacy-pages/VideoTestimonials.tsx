@@ -5,7 +5,7 @@ import { Footer } from "@/components/HomePage";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { getYoutubeEmbedUrl } from "@/data/videoTestimonials";
 import { useVideoTestimonialsConvex } from "@/hooks/useConvex";
-import { Play, MapPin, X } from "lucide-react";
+import { Play, MapPin, X, Instagram, Youtube } from "lucide-react";
 
 const VideoTestimonials = () => {
   const { data: videos, isLoading } = useVideoTestimonialsConvex();
@@ -54,15 +54,27 @@ const VideoTestimonials = () => {
                 {[...videos]
                   .sort((a, b) => a.display_order - b.display_order)
                   .map((video) => {
-                    const embedUrl = getYoutubeEmbedUrl(video.youtube_url);
-                    const thumbnailUrl = `https://img.youtube.com/vi/${extractVideoId(video.youtube_url)}/hqdefault.jpg`;
+                    const isYoutubeActuallyInsta = video.youtube_url?.includes("instagram.com");
+                    const hasActualYoutube = video.youtube_url && !isYoutubeActuallyInsta;
+                    
+                    const embedUrl = hasActualYoutube ? getYoutubeEmbedUrl(video.youtube_url) : null;
+                    const videoId = hasActualYoutube ? extractVideoId(video.youtube_url || "") : "";
+                    const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
+                    
+                    const reelUrl = video.instagram_reel_url || (isYoutubeActuallyInsta ? video.youtube_url : null);
                     
                     return (
-                      <div key={video._id} className="rounded-2xl bg-card shadow-card card-interactive overflow-hidden group">
+                      <div key={video._id} className="rounded-2xl bg-card shadow-card card-interactive overflow-hidden group flex flex-col">
                         {/* Video Thumbnail */}
                         <div
-                          className="relative cursor-pointer aspect-video bg-black"
-                          onClick={() => setActiveVideo(video._id === activeVideo ? null : video._id)}
+                          className="relative cursor-pointer aspect-video bg-black shrink-0"
+                          onClick={() => {
+                            if (embedUrl) {
+                              setActiveVideo(video._id === activeVideo ? null : video._id);
+                            } else if (reelUrl) {
+                              window.open(reelUrl, "_blank");
+                            }
+                          }}
                         >
                           {activeVideo === video._id && embedUrl ? (
                             <iframe
@@ -74,15 +86,25 @@ const VideoTestimonials = () => {
                             />
                           ) : (
                             <>
-                              <img
-                                src={thumbnailUrl}
-                                alt={video.title || video.customer_name}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                loading="lazy"
-                              />
+                              {thumbnailUrl ? (
+                                <img
+                                  src={thumbnailUrl}
+                                  alt={video.title || video.customer_name}
+                                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/40 to-pink-900/40">
+                                  <Instagram className="h-16 w-16 text-pink-500/50" />
+                                </div>
+                              )}
                               <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/40 transition-colors">
                                 <div className="h-16 w-16 rounded-full bg-primary/90 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                  <Play className="h-7 w-7 text-white ml-1" fill="white" />
+                                  {embedUrl ? (
+                                    <Play className="h-7 w-7 text-white ml-1" fill="white" />
+                                  ) : (
+                                    <Instagram className="h-7 w-7 text-white" />
+                                  )}
                                 </div>
                               </div>
                             </>
@@ -90,20 +112,42 @@ const VideoTestimonials = () => {
                         </div>
 
                         {/* Info */}
-                        <div className="p-5">
+                        <div className="p-5 flex-1 flex flex-col">
                           {video.title && (
-                            <h3 className="font-bold text-foreground mb-2 line-clamp-2">{video.title}</h3>
+                            <h3 className="font-bold text-foreground mb-3 line-clamp-2">{video.title}</h3>
                           )}
-                          <div className="flex items-center gap-3">
-                            <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm shrink-0">
-                              {video.customer_name?.charAt(0)}
-                            </div>
-                            <div>
-                              <p className="font-semibold text-foreground text-sm">{video.customer_name}</p>
-                              {video.location && (
-                                <p className="text-xs text-muted-foreground flex items-center gap-1">
-                                  <MapPin className="h-3 w-3" /> {video.location}
-                                </p>
+                          
+                          <div className="mt-auto">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm shrink-0">
+                                  {video.customer_name?.charAt(0)}
+                                </div>
+                                <div>
+                                  <p className="font-semibold text-foreground text-sm">{video.customer_name}</p>
+                                  {video.location && (
+                                    <p className="text-xs text-muted-foreground flex items-center gap-1">
+                                      <MapPin className="h-3 w-3" /> {video.location}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Instagram Reel Badge */}
+                              {reelUrl && (
+                                <a
+                                  href={reelUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  title="Watch on Instagram Reels"
+                                  className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-white transition-all hover:scale-105 hover:shadow-lg shrink-0"
+                                  style={{
+                                    background: "linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)",
+                                  }}
+                                >
+                                  <Instagram className="h-3.5 w-3.5" />
+                                  Reel
+                                </a>
                               )}
                             </div>
                           </div>
@@ -124,6 +168,7 @@ const VideoTestimonials = () => {
 
 // Helper to extract video ID
 function extractVideoId(url: string): string {
+  if (!url) return "";
   try {
     const parsed = new URL(url);
     if (parsed.hostname.includes("youtube.com")) {

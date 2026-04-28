@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 // ── Video Testimonial Type ──
 export interface VideoTestimonial {
   id: string;
-  youtube_url: string;
+  youtube_url?: string;
+  instagram_reel_url?: string;
   customer_name: string;
   location?: string;
   title?: string;
@@ -99,7 +100,8 @@ export const deleteVideoTestimonial = (id: string) => {
 };
 
 // ── YouTube URL to embed ──
-export const getYoutubeEmbedUrl = (url: string): string | null => {
+export const getYoutubeEmbedUrl = (url?: string): string | null => {
+  if (!url) return null;
   try {
     const parsed = new URL(url);
     let videoId: string | null = null;
@@ -121,7 +123,8 @@ export const getYoutubeEmbedUrl = (url: string): string | null => {
   return null;
 };
 
-export const getYoutubeThumbnail = (url: string): string | null => {
+export const getYoutubeThumbnail = (url?: string): string | null => {
+  if (!url) return null;
   try {
     const parsed = new URL(url);
     let videoId: string | null = null;

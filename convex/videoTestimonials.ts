@@ -18,7 +18,8 @@ export const upsertVideoTestimonial = mutation({
   args: {
     id: v.optional(v.id("video_testimonials")),
     video: v.object({
-      youtube_url: v.string(),
+      youtube_url: v.optional(v.string()),
+      instagram_reel_url: v.optional(v.string()),
       customer_name: v.string(),
       location: v.optional(v.string()),
       title: v.optional(v.string()),

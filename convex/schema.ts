@@ -55,7 +55,8 @@ export default defineSchema({
 
   // ── Video Testimonials ─────────────────────────────────────────────────────
   video_testimonials: defineTable({
-    youtube_url: v.string(),
+    youtube_url: v.optional(v.string()),
+    instagram_reel_url: v.optional(v.string()),  // Instagram Reels link
     customer_name: v.string(),
     location: v.optional(v.string()),
     title: v.optional(v.string()),
