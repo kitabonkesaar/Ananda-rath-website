@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { Footer } from "@/components/HomePage";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -199,7 +199,7 @@ const BlogPage = () => {
                 <h3 className="text-xl font-bold text-white mb-2">Ready for Your Spiritual Journey?</h3>
                 <p className="text-white/70 text-sm mb-5">Book your yatra with AnandaRath and travel in comfort & devotion.</p>
                 <div className="flex flex-wrap justify-center gap-3">
-                  <Link href="/packages" className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-primary hover:bg-white/90 transition-all">
+                  <Link to="/packages" className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-primary hover:bg-white/90 transition-all">
                     View Packages <ArrowRight className="h-4 w-4" />
                   </Link>
                   <WhatsAppButton label="Chat on WhatsApp" />

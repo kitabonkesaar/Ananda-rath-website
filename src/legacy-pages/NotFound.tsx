@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { Footer } from "@/components/HomePage";
 import SEO from "@/components/SEO";
@@ -21,7 +21,7 @@ const NotFound = () => (
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
           <Link
-            href="/"
+            to="/"
             className="inline-flex items-center gap-2 rounded-full gradient-saffron px-6 py-3 text-sm font-semibold text-white shadow-saffron transition-all hover:scale-105"
           >
             <Home className="h-4 w-4" />

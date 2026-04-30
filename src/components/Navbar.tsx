@@ -1,7 +1,4 @@
-"use client";
-
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, useLocation } from "react-router-dom";
 // Next.js returns a StaticImageData object for static imports; .src gets the URL
 import _logo from "@/assets/logo.png";
 const logo = typeof _logo === "string" ? _logo : (_logo as any).src;
@@ -22,7 +19,7 @@ const navLinks = [
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const pathname = usePathname();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -44,7 +41,7 @@ const Navbar = () => {
       }`}
     >
       <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center group" aria-label="AnandaRath Home">
+        <Link to="/" className="flex items-center group" aria-label="AnandaRath Home">
           <img
             src={logo}
             alt="AnandaRath - Spiritual Tourism"
@@ -56,7 +53,7 @@ const Navbar = () => {
           {navLinks.map((link) => (
             <Link
               key={link.to}
-              href={link.to}
+              to={link.to}
               className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                 pathname === link.to
                   ? "text-primary bg-primary/5"
@@ -95,7 +92,7 @@ const Navbar = () => {
           {navLinks.map((link) => (
             <Link
               key={link.to}
-              href={link.to}
+              to={link.to}
               className={`px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
                 pathname === link.to
                   ? "text-primary bg-primary/5"

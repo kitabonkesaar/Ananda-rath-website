@@ -1,7 +1,5 @@
-"use client";
-
 import { useState, useEffect, useMemo } from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { Clock, MapPin, Star, Bus, Utensils, Shield, Heart, Image, Phone, Mail, MapPinned, ArrowRight, Sparkles, Send, Camera, X, Search, SlidersHorizontal, CalendarDays, Tag } from "lucide-react";
 import WhatsAppButton from "./WhatsAppButton";
 import _heroImg from "@/assets/hero-kedarnath.jpg";
@@ -116,7 +114,7 @@ export const HeroSection = () => {
             </p>
             <div className="flex flex-wrap gap-4">
               <WhatsAppButton variant="hero" label="Enquire on WhatsApp" />
-              <Link href="/packages" className="inline-flex items-center gap-2 rounded-full border-2 border-white/25 px-8 py-4 text-lg font-semibold text-white transition-all hover:border-white/50 hover:bg-white/10 backdrop-blur-sm">
+              <Link to="/packages" className="inline-flex items-center gap-2 rounded-full border-2 border-white/25 px-8 py-4 text-lg font-semibold text-white transition-all hover:border-white/50 hover:bg-white/10 backdrop-blur-sm">
                 View Packages
                 <ArrowRight className="h-5 w-5" />
               </Link>
@@ -254,7 +252,7 @@ export const FeaturedPackagesSection = () => {
         ) : (
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {packages.slice(0, 3).map((pkg) => (
-              <Link href={`/package/${pkg.slug}`} key={pkg._id} className="group overflow-hidden rounded-2xl bg-card shadow-card card-interactive">
+              <Link to={`/package/${pkg.slug}`} key={pkg._id} className="group overflow-hidden rounded-2xl bg-card shadow-card card-interactive">
                 <div className="relative overflow-hidden">
                   {pkg.image_url ? (
                     <img src={pkg.image_url} alt={pkg.title} className="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" onError={(e) => { e.currentTarget.src = "https://placehold.co/600x400/f1f5f9/94a3b8?text=Image+Not+Found"; }} />
@@ -306,7 +304,7 @@ export const FeaturedPackagesSection = () => {
         )}
         {packages && packages.length > 3 && (
           <div className="text-center mt-12">
-            <Link href="/packages" className="inline-flex items-center gap-2 rounded-full border-2 border-primary px-8 py-3 text-sm font-semibold text-primary transition-all hover:bg-primary hover:text-white">
+            <Link to="/packages" className="inline-flex items-center gap-2 rounded-full border-2 border-primary px-8 py-3 text-sm font-semibold text-primary transition-all hover:bg-primary hover:text-white">
               View All Packages <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -424,7 +422,7 @@ export const PackagesSection = () => {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((pkg) => (
               <Link
-                href={`/package/${pkg.slug}`}
+                to={`/package/${pkg.slug}`}
                 key={pkg._id}
                 className="group flex flex-col overflow-hidden rounded-2xl bg-card border border-border/40 shadow-card card-interactive"
               >
@@ -759,7 +757,7 @@ export const Footer = () => (
               { to: "/contact", label: "Contact" },
             ].map((link) => (
               <li key={link.to}>
-                <Link href={link.to} className="text-sm text-white/50 hover:text-white transition-colors">
+                <Link to={link.to} className="text-sm text-white/50 hover:text-white transition-colors">
                   {link.label}
                 </Link>
               </li>

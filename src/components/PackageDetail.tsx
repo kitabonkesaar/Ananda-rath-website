@@ -1,7 +1,4 @@
-"use client";
-
-import Link from "next/link";
-import { useParams } from "next/navigation";
+import { Link, useParams } from "react-router-dom";
 import { usePackageBySlug } from "@/hooks/useConvex";
 import WhatsAppButton, { CallButton } from "@/components/WhatsAppButton";
 import { Clock, MapPin, Check, X, ArrowLeft, Users, Image } from "lucide-react";
@@ -14,8 +11,8 @@ interface ItineraryDay {
 }
 
 const PackageDetail = () => {
-  const params = useParams();
-  const slug = (params?.slug as string) || "";
+  const { id } = useParams<{ id: string }>();
+  const slug = id || "";
   const { data: pkg, isLoading, error } = usePackageBySlug(slug);
 
   if (isLoading) {
@@ -30,7 +27,7 @@ const PackageDetail = () => {
     return (
       <div className="container py-20 text-center">
         <h1 className="text-2xl font-bold text-foreground">Package Not Found</h1>
-        <Link href="/" className="mt-4 inline-block text-primary underline">
+        <Link to="/" className="mt-4 inline-block text-primary underline">
           Go to Home
         </Link>
       </div>
@@ -62,7 +59,7 @@ const PackageDetail = () => {
         <div className="absolute inset-0 gradient-hero-overlay" />
         <div className="absolute bottom-6 left-0 right-0 container">
           <Link
-            href="/packages"
+            to="/packages"
             className="mb-3 inline-flex items-center gap-1 text-sm text-white/70 hover:text-white transition-colors"
           >
             <ArrowLeft className="h-4 w-4" /> Back to Packages
